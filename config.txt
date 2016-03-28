@@ -1,0 +1,6 @@
+{
+    "AUTOLOAD": true,
+    "GRAPHICS": "pyglet",
+    "ZOOM": 15,
+    "TIME FACTOR": 24
+}
