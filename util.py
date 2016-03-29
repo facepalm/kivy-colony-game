@@ -7,6 +7,7 @@ import pickle
 import os
 import naming
 import sys
+import random
 
 #TIME_FACTOR = 168 # 1 irl hour = 1 week
 #TIME_FACTOR = 24 # 1 irl hour = 1 day
@@ -19,6 +20,22 @@ equipment_targets = dict()
 #GRAPHICS = None
 GLOBAL_X=0
 GLOBAL_Y=0
+
+def getWackyDist(total_mass = 2E30, objects = 10, wacky_facty = 1):
+    '''returns a lopsided distribution, suitable for star systems'''
+    array = []
+    unusedprob = 1.0
+    for i in range(0,objects-1):
+        rand = random.random()
+        array.append( rand * unusedprob )
+        unusedprob -= rand * unusedprob
+    array.append( unusedprob )
+    #array.sort()
+    print array, sum(array)
+    odds = np.array([pow(2,10*i*wacky_facty)-1 for i in array])
+    odds /= sum(odds)
+    print odds #, sum(odds), (pow(2,10)-1)
+    return odds*total_mass
 
 def radian(deg):
     return 3.14159*deg/180
@@ -117,3 +134,4 @@ def autoload():
         e = sys.exc_info()[0]
         generic_logger.warning("Autoload failed: %s" % e)
     return False
+       
