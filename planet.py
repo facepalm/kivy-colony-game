@@ -6,7 +6,7 @@ import random
 
 
 class Planet(object):
-    def __init__(self,name=None, logger=None, mass = None):
+    def __init__(self,mass=None,sun=None,orbit=None,name=None, logger=None):
         self.mass = mass if mass else 1E8*random.random()
         self.name = name if name else util.planet_name(self)
         if logger:
@@ -15,7 +15,7 @@ class Planet(object):
             self.logger = logging.getLogger(util.generic_logger.name + '.' + self.name)
     
         if self.mass > 1E29: 
-            self.type = 'INVALID' #actually a sun.  Let the Star init handle this later
+            self.type = 'INVALID' #actually a sun.  Throw an error, this shouldnt happen
         elif self.mass > 1E28: 
             self.type = 'Brown dwarf' #counting this as a planet, since they have negligible radiation    
         elif self.mass > 1E26: 
@@ -34,9 +34,19 @@ class Planet(object):
         self.orbits = 1
         print self.sites, self.orbits
     
-class Star(Planet):
-    def __init__(self, **kwargs):
-        super(Star, self).__init__(**kwargs)
+class Star(object):
+    def __init__(self, mass, name=None, logger=None):
+        self.mass = mass
+        self.name = name if name else util.star_name(self)
+        if logger:
+            self.logger = logging.getLogger(logger.name + '.' + self.name)
+        else: 
+            self.logger = logging.getLogger(util.generic_logger.name + '.' + self.name)
+    
+        if self.mass > 1E31: 
+            self.type = 'Super' #TODO do this right
+        else:
+            self.type = 'Small'
         
     
 if __name__ == "__main__":        

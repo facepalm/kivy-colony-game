@@ -16,9 +16,9 @@ class Universe(object):
         self.primary = planet.Star(mass=primary_star_mass)
         
         num_orbits = np.random.randint(8,18)
-        orbits = np.arange(0,30)
-        np.random.shuffle( orbits )
-        orbits = orbits[ orbits != 2 ]
+        orbits = [pow(10,1.5*x)- 0.6 for x in np.random.random(num_orbits)]
+        #np.random.shuffle( orbits )
+        #orbits = orbits[ orbits != 2 ]
         orbit_mass = np.random.choice(self.system_distribution,size=num_orbits,replace=False)
         
         self.planets = []
