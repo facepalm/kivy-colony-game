@@ -31,10 +31,11 @@ def getWackyDist(total_mass = 2E30, objects = 10, wacky_facty = 1):
         unusedprob -= rand * unusedprob
     array.append( unusedprob )
     #array.sort()
-    print array, sum(array)
+    #print array, sum(array)
     odds = np.array([pow(2,10*i*wacky_facty)-1 for i in array])
     odds /= sum(odds)
-    print odds #, sum(odds), (pow(2,10)-1)
+    odds = odds[ odds > 0 ]
+    #print odds #, sum(odds), (pow(2,10)-1)
     return odds*total_mass
 
 def radian(deg):
@@ -112,7 +113,7 @@ generic_logger.debug("Logger initiated.")
 def autosave():
     try:
         datafile = open(os.path.join('save','autosave'),'w')
-        pickle.dump(globalvars.universe,datafile,2)
+        pickle.dump(globalvars.universe,datafile,2)        
         datafile.close()
         generic_logger.info("Universe saved.  Superman given the day off.")
         return True

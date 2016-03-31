@@ -8,6 +8,7 @@ from kivy.uix.image import Image
 
 import util
 import globalvars
+import game
 
 #graphics stuff
 
@@ -15,12 +16,14 @@ class GameApp(App):
 
     def build(self):
         root = AnchorLayout()
-        autoloaded = util.autoload()
+        autoloaded = util.autoload() if globalvars.config['AUTOLOAD'] else False
                 
         root.add_widget( Image( source = 'NGC134_70wendel1024.jpg' ) )        
                 
         if not autoloaded:
             #generate universe
+            globalvars.universe = game.Universe()
+            
             #autosave()
             root.add_widget( IntroPanelView() )
         return root

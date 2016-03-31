@@ -1,6 +1,6 @@
 {
-    "AUTOLOAD": true,
-    "GRAPHICS": "pyglet",
+    "AUTOLOAD": false,
+    "GRAPHICS": "kivy",
     "ZOOM": 15,
     "TIME FACTOR": 24
 }
