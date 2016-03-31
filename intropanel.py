@@ -42,11 +42,11 @@ Oh good.
 
 The meme continues its work. It directs your attention to the proper startup sequences. Status reports, progress reports, history lessons. So much to take in, from all directions.
 
-Behind you, somewhere: Earth. You've kept in touch, even in your somnambulence, with the cradle of humanity. Humanity is still there. They've grown strange. As ever, they race to brink of their own destruction, and as ever, they pull back at the precipice. But they aren't expanding. Not anymore. Maybe they will again, or maybe yours will be the only colonization ship ever to grace this particular star.
+Behind you, somewhere: Earth. You've kept in touch, even in your somnambulence, with the cradle of humanity. Humanity is still there. They've grown strange. As ever, they race to the brink of their own destruction, and as ever, they pull back at the precipice. But they aren't expanding. Not anymore. Maybe they will again, or maybe yours will be the only colonization ship ever to grace this particular star.
 
 And humanity is here. Nestled deep within your hold, as well-protected as it is possible to be in a metal-hulled bottle flying through the heavens, are thousands of cryoprotected human embryos. All that humanity was or will be, angels and devils, ignorance and genius, is kept here in this seed.  With them are many other Terran species, supporting equipment, mining equipment, industrial equipment, spare parts, robotic chassis, computronium, conventional rocket engines with fuel, probes, drones, rovers and as much raw material as you were thought to have critical need of.
 
-It's a big seed. But consider the grand scheme of things.
+It's a big seed, except in the grand scheme of things.
 
 Ahead: your destination. Not much about your target system is known, save that it is complex, i.e. its sun has irregular fluctuations indicative of a multi-body solar system, and it has at least one roughly Earth-sized planet in the habitable zone, a.k.a. the "Goldilocks" region. You will need to make use of what resources you find to survive, and thrive, and build a new home for your charges.  
 

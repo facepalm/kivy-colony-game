@@ -1,5 +1,6 @@
 import util
 import numpy as np
+import planet
 
 class Universe(object):    
     def __init__(self):
@@ -11,6 +12,8 @@ class Universe(object):
                         
         primary_star_mass = 2E30 + 1E29*np.random.randn() #self.system_distribution.max()
         #self.system_distribution = self.system_distribution[self.system_distribution != primary_star_mass]
+        
+        self.primary = planet.Star(mass=primary_star_mass)
         
         num_orbits = np.random.randint(8,18)
         orbits = np.arange(0,30)
@@ -26,3 +29,5 @@ class Universe(object):
                 
             #initialize planet, extend list (might be a list of asteroids instead)    
             self.planets.extend([])
+            
+        #habitable zone world            

@@ -30,12 +30,9 @@ def getWackyDist(total_mass = 2E30, objects = 10, wacky_facty = 1):
         array.append( rand * unusedprob )
         unusedprob -= rand * unusedprob
     array.append( unusedprob )
-    #array.sort()
-    #print array, sum(array)
     odds = np.array([pow(2,10*i*wacky_facty)-1 for i in array])
     odds /= sum(odds)
     odds = odds[ odds > 0 ]
-    #print odds #, sum(odds), (pow(2,10)-1)
     return odds*total_mass
 
 def radian(deg):
@@ -93,6 +90,9 @@ def vec_dist(a,b):
 
 def planet_name(planet=None,planet_type=None):
     return naming.planet_name(planet,planet_type)
+
+def star_name(star=None):
+    return "Placeholder Star"
 
 generic_logger=logging.getLogger("SystemLog")
 generic_logger.setLevel(logging.DEBUG)
