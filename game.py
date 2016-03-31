@@ -8,7 +8,7 @@ class Universe(object):
         
     def generate_system(self,system_type='Generic'):
     
-        self.system_distribution = util.getWackyDist(total_mass = 1E29, objects = 20, wacky_facty = 1)
+        self.system_distribution = util.getWackyDist(total_mass = 1E29, objects = 20, wacky_facty = 0.5)
                         
         primary_star_mass = 2E30 + 1E29*np.random.randn() #self.system_distribution.max()
         #self.system_distribution = self.system_distribution[self.system_distribution != primary_star_mass]
