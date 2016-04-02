@@ -2,12 +2,13 @@ import util
 import numpy as np
 import planet
 from scipy.stats import wald
+import systempanel
 
 class Universe(object):    
     def __init__(self):
         self.generate_system()
         
-    def generate_system(self,system_type='Generic'):
+    def generate_system(self,system_type='Generic'):            
     
         self.system_distribution = util.getWackyDist(total_mass = 1E29, objects = 20, wacky_facty = 0.5)
                             
@@ -16,6 +17,7 @@ class Universe(object):
         #self.system_distribution = self.system_distribution[self.system_distribution != primary_star_mass]
         
         self.primary = planet.Star(solar_masses=primary_star_mass)
+        
         print self.primary.info()
         
         num_orbits = np.random.randint(8,18)

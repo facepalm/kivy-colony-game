@@ -18,14 +18,20 @@ class GameApp(App):
         root = AnchorLayout()
         autoloaded = util.autoload() if globalvars.config['AUTOLOAD'] else False
                 
-        root.add_widget( Image( source = 'NGC134_70wendel1024.jpg' ) )        
+        #root.add_widget( Image( source = 'generic_sun.png'))#'NGC134_70wendel1024.jpg' ) )  
+        
+            
                 
         if not autoloaded:
             #generate universe
             globalvars.universe = game.Universe()
+            #autosave?
             
-            #autosave()
-            root.add_widget( IntroPanelView() )
+        print globalvars.universe.primary.view
+        root.add_widget (globalvars.universe.primary.view)                
+        
+                
+        #if not autoloaded: root.add_widget( IntroPanelView() )
         return root
 
 if __name__ == '__main__':
