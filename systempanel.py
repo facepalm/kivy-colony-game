@@ -14,7 +14,15 @@ class SystemView(FloatLayout):
         
         self.add_widget(self.primary.image)                
             
-    def add_child(self,_list=[]):
+    def add_child(self,_list=[]):        
         self.children.extend(_list)
+           
+    def remove_child(self,obj):
+        self.children.remove(obj)    
+        
+    def update(self):      
+        for body in self.primary.orbiting_bodies:
+            self.add_widget( body.orbit_image )
+
         
             

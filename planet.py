@@ -43,16 +43,18 @@ class Planet(object):
         
         self.orbiting_bodies = []
         
-        self.orbit_pos = random.random()*np.pi*2
+        self.orbit_pos = random.random()*360
         
         frac = 0.25
         
         self.image=Image(source='generic_sun.png',allow_stretch=True,size_hint=(None, None),size=(round(75*frac), round(75*frac)),pos_hint={'center_x':.5, 'center_y':.5})
         
-        self.orbitimage = Image(source='generic_sun.png',allow_stretch=True,size_hint=(None, None),size=(round(75*frac), round(75*frac)),pos_hint={'center_x':.5+ math.cos(self.orbit_pos)*(1/2.0), 'center_y':.5+(math.sin(self.orbit_pos)/2.0)})
+        orbit_scale = 30
         
+        self.orbit_image = Image(source='generic_sun.png',allow_stretch=True,size_hint=(None, None),size=(round(75*frac), round(75*frac)),pos_hint={'center_x':.5+ math.cos(self.orbit_pos)*(float(math.log((self.orbit+1),orbit_scale))/2.0), 'center_y':.5+math.sin(self.orbit_pos)*(float(math.log((self.orbit+1),orbit_scale))/2.0)})
+        print self.orbit_image.pos_hint
         
-        #self.view = systempanel.SystemView(primary=self)
+        self.view = systempanel.SystemView(primary=self)
         
     def initialize_sites(self):
         self.sites = 6 if self.type == 'Planet' else 2 if self.type == 'Dwarf planet' else 1 if self.type == 'Planetoid' else 0
@@ -136,17 +138,12 @@ class Star(object):
         
         self.orbiting_bodies = []
         
-        #self.view = systempanel.SystemView(primary=self)
+        self.view = systempanel.SystemView(primary=self)
         
     def random_habitable_orbit(self):
         return (random.random()*0.6 + 0.8) * pow( self.luminosity ,0.5)
         
-    def generate_view(self):
-        self.view = systempanel.SystemView(primary=self)
-        for body in self.orbiting_bodies:
-            self.view.add_widget( body.orbitimage )
-        return self.view
-
+    
     def info(self):
         out = self.type+'-type star, with mass of %.2f' % self.solar_masses + ' and luminosity of %.2f' % self.luminosity
         out += ', Habitable zone between %.2f' % self.habitable_start +' and %.2f' % self.habitable_end
