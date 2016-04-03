@@ -3,6 +3,7 @@ import numpy as np
 import planet
 from scipy.stats import wald
 import systempanel
+import random
 
 class Universe(object):    
     def __init__(self):
@@ -36,4 +37,8 @@ class Universe(object):
             newp = planet.generate_planet(mass,self.primary,orbits[i])
             self.planets.extend(newp)
             
-        #habitable zone world            
+        #habitable zone world        
+        newp = planet.generate_planet(random.random()*9E24 + 1E24,self.primary,self.primary.random_habitable_orbit())
+        self.planets.extend(newp)    
+        
+        self.primary.generate_view()

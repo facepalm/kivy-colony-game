@@ -12,7 +12,7 @@ class SystemView(FloatLayout):
         self.children = []
         self.scale = None
         
-        self.add_widget(self.primary.simpleview)                
+        self.add_widget(self.primary.image)                
             
     def add_child(self,_list=[]):
         self.children.extend(_list)

@@ -3,6 +3,7 @@ import util
 import logging
 import random
 import systempanel
+import math
 
 from kivy.uix.image import Image
 from kivy.uix.floatlayout import FloatLayout
@@ -10,6 +11,8 @@ from kivy.uix.floatlayout import FloatLayout
 def generate_planet(mass,sun,orbit):
     p = Planet(mass,sun,orbit)
     #eventually walk through planetary history - greenhouse events, asteroidation, etc
+    
+    sun.orbiting_bodies.extend([p])
     return [p]
 
 class Planet(object):
@@ -27,19 +30,32 @@ class Planet(object):
             self.type = 'INVALID' #actually a sun.  Throw an error, this shouldnt happen
         elif self.mass > 1E28: 
             self.type = 'Brown dwarf' #counting this as a planet, since they have negligible radiation    
-        elif self.mass > 1E26: 
-            self.type = 'Gas giant' #position in orbit will affect gas or ice giant
+        elif self.mass > 1E26:
+            self.type = 'Gas giant' if self.orbit < self.sun.ice_line else 'Ice giant'
         elif self.mass > 1E23:
             self.type = 'Planet' #rocky world, but capable of retaining an atmosphere, even if barely
         elif self.mass > 1E21:
-            self.type = 'Dwarf Planet' #larger moons and asteroids, rounded
+            self.type = 'Dwarf planet' #larger moons and asteroids, rounded
         else:
             self.type = 'Planetoid' #small moons, asteroids, rocks, etc
     
         self.initialize_sites()
         
+        self.orbiting_bodies = []
+        
+        self.orbit_pos = random.random()*np.pi*2
+        
+        frac = 0.25
+        
+        self.image=Image(source='generic_sun.png',allow_stretch=True,size_hint=(None, None),size=(round(75*frac), round(75*frac)),pos_hint={'center_x':.5, 'center_y':.5})
+        
+        self.orbitimage = Image(source='generic_sun.png',allow_stretch=True,size_hint=(None, None),size=(round(75*frac), round(75*frac)),pos_hint={'center_x':.5+ math.cos(self.orbit_pos)*(1/2.0), 'center_y':.5+(math.sin(self.orbit_pos)/2.0)})
+        
+        
+        #self.view = systempanel.SystemView(primary=self)
+        
     def initialize_sites(self):
-        self.sites = 6 if self.type == 'Planet' else 2 if self.type == 'Dwarf Planet' else 1 if self.type == 'Planetoid' else 0
+        self.sites = 6 if self.type == 'Planet' else 2 if self.type == 'Dwarf planet' else 1 if self.type == 'Planetoid' else 0
         self.orbits = 1
         #print self.sites, self.orbits
     
@@ -105,17 +121,31 @@ class Star(object):
             self.color_name = 'Blue'     
             self.color = np.array([155, 176, 255,255])/saturation 
         
-        self.habitable_start = 0.75 * pow( self.luminosity ,0.5)
+        self.habitable_start = 0.80 * pow( self.luminosity ,0.5)
         self.habitable_end = 1.4 * pow( self.luminosity ,0.5)
         
         self.snow_line = 3 * pow( self.luminosity ,0.5)
+        self.ice_line = 10 * pow( self.luminosity ,0.5)
         
         frac = 0.25
         
-        self.simpleview=Image(source='generic_sun.png',color=self.color,allow_stretch=True,size_hint=(None, None),size=(round(75*frac*self.radius), round(75*frac*self.radius)),pos_hint={'center_x':.5, 'center_y':.5})
+        self.image=Image(source='generic_sun.png',color=self.color,allow_stretch=True,size_hint=(None, None),size=(round(75*frac*self.radius), round(75*frac*self.radius)),pos_hint={'center_x':.5, 'center_y':.5})
+        
+        self.orbitimage = None #primary star doesn't orbit - would need barycenter calculation if multiple suns
+        #self.orbitimage = Image(source='generic_sun.png',color=self.color,allow_stretch=True,size_hint=(None, None),size=(round(75*frac*self.radius), round(75*frac*self.radius)),pos_hint={'center_x':.75, 'center_y':.5})
+        
+        self.orbiting_bodies = []
+        
+        #self.view = systempanel.SystemView(primary=self)
+        
+    def random_habitable_orbit(self):
+        return (random.random()*0.6 + 0.8) * pow( self.luminosity ,0.5)
+        
+    def generate_view(self):
         self.view = systempanel.SystemView(primary=self)
-        
-        
+        for body in self.orbiting_bodies:
+            self.view.add_widget( body.orbitimage )
+        return self.view
 
     def info(self):
         out = self.type+'-type star, with mass of %.2f' % self.solar_masses + ' and luminosity of %.2f' % self.luminosity
