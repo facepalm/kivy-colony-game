@@ -20,9 +20,16 @@ class SystemView(FloatLayout):
     def remove_child(self,obj):
         self.children.remove(obj)    
         
-    def update(self):      
+    def update(self,clear=True):
+        if clear:
+            self.clear_widgets()
+            self.add_widget(self.primary.image)  
         for body in self.primary.orbiting_bodies:
-            self.add_widget( body.orbit_image )
+            if body.orbit_image.parent and body.orbit_image.parent is not self:
+                #remove body's designation
+                body.orbit_image.parent.remove_widget(body.orbit_image)
+            if not body.orbit_image.parent:
+                self.add_widget( body.orbit_image )
 
         
             
