@@ -68,9 +68,10 @@ class Planet(object):
         self.image=Image(source=self.img_name,allow_stretch=True,size_hint=(None, None),size=(round(75*frac), round(75*frac)),pos_hint={'center_x':.5, 'center_y':.5})
         
         
-        orbit_scale = 30
+        orbit_scale = 10
+        orbit_constant = 1
         
-        self.orbit_image = Image(source=self.img_name,allow_stretch=True,size_hint=(None, None),size=(round(75*frac), round(75*frac)),pos_hint={'center_x':.5+ math.cos(self.orbit_pos)*(float(math.log((self.orbit+1),orbit_scale))/2.0), 'center_y':.5+math.sin(self.orbit_pos)*(float(math.log((self.orbit+1),orbit_scale))/2.0)})
+        self.orbit_image = Image(source=self.img_name,allow_stretch=True,size_hint=(None, None),size=(round(75*frac), round(75*frac)),pos_hint={'center_x':.5+ math.cos(self.orbit_pos)*(float(math.log((self.orbit+1),orbit_scale))/(2.0*orbit_constant)), 'center_y':.5+math.sin(self.orbit_pos)*(float(math.log((self.orbit+1),orbit_scale))/(2.0*orbit_constant))})
         print self.orbit_image.pos_hint
         
         
