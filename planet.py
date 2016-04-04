@@ -26,18 +26,33 @@ class Planet(object):
         else: 
             self.logger = logging.getLogger(util.generic_logger.name + '.' + self.name)
     
+        self.color = None #assign color to enable tinting
+        self.img_name = 'generic_sun.png'
+        
         if self.mass > 1E29: 
             self.type = 'INVALID' #actually a sun.  Throw an error, this shouldnt happen
         elif self.mass > 1E28: 
             self.type = 'Brown dwarf' #counting this as a planet, since they have negligible radiation    
         elif self.mass > 1E26:
-            self.type = 'Gas giant' if self.orbit < self.sun.ice_line else 'Ice giant'
+            if self.orbit < self.sun.ice_line:
+                self.type = 'Gas giant' 
+                saturation = 255.0
+                self.color = random.choice([np.array([255, 141, 110,255])/saturation, np.array([255, 198, 110,255])/saturation])
+                #self.radius = 
+            else:
+                saturation = 255.0
+                self.type = 'Ice giant'
+                self.color = random.choice([np.array([228, 250, 250,255])/saturation, np.array([11, 41, 255, 255])/saturation])
+            self.img_name = 'generic_sun.png'
+            
         elif self.mass > 1E23:
             self.type = 'Planet' #rocky world, but capable of retaining an atmosphere, even if barely
         elif self.mass > 1E21:
             self.type = 'Dwarf planet' #larger moons and asteroids, rounded
         else:
             self.type = 'Planetoid' #small moons, asteroids, rocks, etc
+    
+    
     
         self.initialize_sites()
         
@@ -47,12 +62,17 @@ class Planet(object):
         
         frac = 0.25
         
-        self.image=Image(source='generic_sun.png',allow_stretch=True,size_hint=(None, None),size=(round(75*frac), round(75*frac)),pos_hint={'center_x':.5, 'center_y':.5})
+        self.image=Image(source=self.img_name,allow_stretch=True,size_hint=(None, None),size=(round(75*frac), round(75*frac)),pos_hint={'center_x':.5, 'center_y':.5})
+        
         
         orbit_scale = 30
         
-        self.orbit_image = Image(source='generic_sun.png',allow_stretch=True,size_hint=(None, None),size=(round(75*frac), round(75*frac)),pos_hint={'center_x':.5+ math.cos(self.orbit_pos)*(float(math.log((self.orbit+1),orbit_scale))/2.0), 'center_y':.5+math.sin(self.orbit_pos)*(float(math.log((self.orbit+1),orbit_scale))/2.0)})
+        self.orbit_image = Image(source=self.img_name,allow_stretch=True,size_hint=(None, None),size=(round(75*frac), round(75*frac)),pos_hint={'center_x':.5+ math.cos(self.orbit_pos)*(float(math.log((self.orbit+1),orbit_scale))/2.0), 'center_y':.5+math.sin(self.orbit_pos)*(float(math.log((self.orbit+1),orbit_scale))/2.0)})
         print self.orbit_image.pos_hint
+        
+        if self.color is not None: 
+            self.image.color=self.color
+            self.orbit_image.color=self.color
         
         self.view = systempanel.SystemView(primary=self)
         
