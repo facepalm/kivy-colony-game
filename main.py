@@ -29,7 +29,7 @@ class GameApp(App):
             
         print globalvars.universe.primary.view
         root.add_widget (globalvars.universe.primary.view)                
-        
+        globalvars.universe.primary.view.update(clear=True)
                 
         #if not autoloaded: root.add_widget( IntroPanelView() )
         return root

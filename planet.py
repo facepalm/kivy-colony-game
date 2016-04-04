@@ -7,6 +7,7 @@ import math
 
 from kivy.uix.image import Image
 from kivy.uix.floatlayout import FloatLayout
+from kivy.graphics import Line, Color
 
 def generate_planet(mass,sun,orbit):
     p = Planet(mass,sun,orbit)
@@ -27,7 +28,8 @@ class Planet(object):
             self.logger = logging.getLogger(util.generic_logger.name + '.' + self.name)
     
         self.color = None #assign color to enable tinting
-        self.img_name = 'generic_sun.png'
+        self.img_name = 'generic_sun.png'        
+        frac = 0.25
         
         if self.mass > 1E29: 
             self.type = 'INVALID' #actually a sun.  Throw an error, this shouldnt happen
@@ -51,7 +53,8 @@ class Planet(object):
             self.type = 'Dwarf planet' #larger moons and asteroids, rounded
         else:
             self.type = 'Planetoid' #small moons, asteroids, rocks, etc
-    
+            self.img_name = 'generic_asteroid.png'
+            frac = 0.10
     
     
         self.initialize_sites()
@@ -60,7 +63,7 @@ class Planet(object):
         
         self.orbit_pos = random.random()*360
         
-        frac = 0.25
+        
         
         self.image=Image(source=self.img_name,allow_stretch=True,size_hint=(None, None),size=(round(75*frac), round(75*frac)),pos_hint={'center_x':.5, 'center_y':.5})
         
@@ -69,6 +72,8 @@ class Planet(object):
         
         self.orbit_image = Image(source=self.img_name,allow_stretch=True,size_hint=(None, None),size=(round(75*frac), round(75*frac)),pos_hint={'center_x':.5+ math.cos(self.orbit_pos)*(float(math.log((self.orbit+1),orbit_scale))/2.0), 'center_y':.5+math.sin(self.orbit_pos)*(float(math.log((self.orbit+1),orbit_scale))/2.0)})
         print self.orbit_image.pos_hint
+        
+        
         
         if self.color is not None: 
             self.image.color=self.color
