@@ -27,7 +27,7 @@ class GameApp(App):
             globalvars.universe = game.Universe()
             #autosave?
             
-        print globalvars.universe.primary.view
+        
         root.add_widget (globalvars.universe.primary.view)                
         globalvars.universe.primary.view.update(clear=True)
         

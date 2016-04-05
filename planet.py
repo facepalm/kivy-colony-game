@@ -29,7 +29,7 @@ class Planet(object):
     
         self.color = None #assign color to enable tinting
         self.img_name = 'generic_sun.png'        
-        frac = 0.25
+        self.img_radius = 0.25
         
         if self.mass > 1E29: 
             self.type = 'INVALID' #actually a sun.  Throw an error, this shouldnt happen
@@ -54,31 +54,25 @@ class Planet(object):
         else:
             self.type = 'Planetoid' #small moons, asteroids, rocks, etc
             self.img_name = 'generic_asteroid.png'
-            frac = 0.10
+            self.img_radius = 0.10
     
     
         self.initialize_sites()
         
         self.orbiting_bodies = []
         
-        self.orbit_pos = random.random()*360
+        self.orbit_pos = 0#random.random()*360
         
         
         
-        self.image=Image(source=self.img_name,allow_stretch=True,size_hint=(None, None),size=(round(75*frac), round(75*frac)),pos_hint={'center_x':.5, 'center_y':.5})
         
-        
-        orbit_scale = 10
-        orbit_constant = 1
-        
-        self.orbit_image = Image(source=self.img_name,allow_stretch=True,size_hint=(None, None),size=(round(75*frac), round(75*frac)),pos_hint={'center_x':.5+ math.cos(self.orbit_pos)*(float(math.log((self.orbit+1),orbit_scale))/(2.0*orbit_constant)), 'center_y':.5+math.sin(self.orbit_pos)*(float(math.log((self.orbit+1),orbit_scale))/(2.0*orbit_constant))})
-        print self.orbit_image.pos_hint
+
+        self.generate_primary_image()        
+        self.generate_orbital_image()
+        #print self.orbit_image.pos_hint
         
         
         
-        if self.color is not None: 
-            self.image.color=self.color
-            self.orbit_image.color=self.color
         
         self.view = systempanel.SystemView(primary=self)
         
@@ -86,6 +80,27 @@ class Planet(object):
         self.sites = 6 if self.type == 'Planet' else 2 if self.type == 'Dwarf planet' else 1 if self.type == 'Planetoid' else 0
         self.orbits = 1
         #print self.sites, self.orbits
+    
+    def generate_primary_image(self):
+        self.image=Image(source=self.img_name,allow_stretch=True,size_hint=(None, None),size=(round(75*self.img_radius), round(75*self.img_radius)),pos_hint={'center_x':.5, 'center_y':.5})      
+    
+        if self.color is not None: 
+            self.image.color=self.color
+            
+    
+    def generate_orbital_image(self):
+        orbit_scale = 10
+        orbit_constant = 1
+          
+        
+        self.orbit_image = Image(source=self.img_name,allow_stretch=True,size_hint=(None, None), \
+                            size=(round(75*self.img_radius), round(75*self.img_radius)), pos_hint={\
+                            'center_x':.5+ math.cos(self.orbit_pos)*(float(math.log((self.orbit+1),orbit_scale))/(2.0*orbit_constant)), \
+                            'center_y':.5+math.sin(self.orbit_pos)*(float(math.log((self.orbit+1),orbit_scale))/(2.0*orbit_constant))})
+                            
+        if self.color is not None: 
+            self.orbit_image.color=self.color
+        
     
 class Star(object):
     def __init__(self, solar_masses, name=None, logger=None):
