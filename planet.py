@@ -7,7 +7,9 @@ import math
 
 from kivy.uix.image import Image
 from kivy.uix.floatlayout import FloatLayout
-from kivy.graphics import Line, Color
+from kivy.graphics import Line, Color, Rotate, PushMatrix, PopMatrix
+
+import planetimages
 
 def generate_planet(mass,sun,orbit):
     p = Planet(mass,sun,orbit)
@@ -20,7 +22,7 @@ class Planet(object):
     def __init__(self,mass=None,sun=None,orbit=None,name=None, logger=None):
         self.mass = mass if mass else 1E8*random.random()
         self.name = name if name else util.planet_name(self)
-        self.sun=sun
+        self.primary=sun
         self.orbit = orbit
         if logger:
             self.logger = logging.getLogger(logger.name + '.' + self.name)
@@ -36,7 +38,8 @@ class Planet(object):
         elif self.mass > 1E28: 
             self.type = 'Brown dwarf' #counting this as a planet, since they have negligible radiation    
         elif self.mass > 1E26:
-            if self.orbit < self.sun.ice_line:
+            self.type = 'Gas giant'
+            '''if self.orbit < self.sun.ice_line:
                 self.type = 'Gas giant' 
                 saturation = 255.0
                 self.color = random.choice([np.array([255, 141, 110,255])/saturation, np.array([255, 198, 110,255])/saturation])
@@ -45,7 +48,7 @@ class Planet(object):
                 saturation = 255.0
                 self.type = 'Ice giant'
                 self.color = random.choice([np.array([228, 250, 250,255])/saturation, np.array([11, 41, 255, 255])/saturation])
-            self.img_name = 'generic_sun.png'
+            self.img_name = 'generic_sun.png'''
             
         elif self.mass > 1E23:
             self.type = 'Planet' #rocky world, but capable of retaining an atmosphere, even if barely
@@ -61,13 +64,13 @@ class Planet(object):
         
         self.orbiting_bodies = []
         
-        self.orbit_pos = 0#random.random()*360
+        self.orbit_pos = random.random()*2*3.14159
         
         
-        
+        self.image = planetimages.random_image(self)
         
 
-        self.generate_primary_image()        
+        #self.generate_primary_image()        
         self.generate_orbital_image()
         #print self.orbit_image.pos_hint
         
@@ -81,8 +84,11 @@ class Planet(object):
         self.orbits = 1
         #print self.sites, self.orbits
     
-    def generate_primary_image(self):
-        self.image=Image(source=self.img_name,allow_stretch=True,size_hint=(None, None),size=(round(75*self.img_radius), round(75*self.img_radius)),pos_hint={'center_x':.5, 'center_y':.5})      
+    def primary_image(self):
+                
+        return planetimages.load_primary(self.image)
+        
+        #Image(source=self.img_name,allow_stretch=True,size_hint=(None, None),size=(round(75*self.img_radius), round(75*self.img_radius)),pos_hint={'center_x':.5, 'center_y':.5})      
     
         if self.color is not None: 
             self.image.color=self.color
@@ -91,12 +97,23 @@ class Planet(object):
     def generate_orbital_image(self):
         orbit_scale = 10
         orbit_constant = 1
-          
         
-        self.orbit_image = Image(source=self.img_name,allow_stretch=True,size_hint=(None, None), \
+        orbit_dist = (float(math.log((self.orbit+1),orbit_scale))/(2.0*orbit_constant))
+                  
+        self.orbit_image = Image(source=self.image,allow_stretch=True,size_hint=(None, None), \
                             size=(round(75*self.img_radius), round(75*self.img_radius)), pos_hint={\
-                            'center_x':.5+ math.cos(self.orbit_pos)*(float(math.log((self.orbit+1),orbit_scale))/(2.0*orbit_constant)), \
-                            'center_y':.5+math.sin(self.orbit_pos)*(float(math.log((self.orbit+1),orbit_scale))/(2.0*orbit_constant))})
+                            'center_x':.5+ math.cos(self.orbit_pos)*orbit_dist, \
+                            'center_y':.5+math.sin(self.orbit_pos)*orbit_dist})
+        with self.orbit_image.canvas.before:
+            PushMatrix()
+            #Rotate(angle=self.orbit_pos*180/3.14159, origin = self.orbit_image.center)           
+            ph = self.orbit_image.pos_hint
+            x = ((ph['center_x']-0.5)/systempanel.orbit_constant + 0.5)
+            y = ((ph['center_y']-0.5)/systempanel.orbit_constant + 0.5)               
+            Rotate(angle=self.orbit_pos*180/3.14159-90, origin = (2000*x,2000*y)) 
+            
+        with self.orbit_image.canvas.after:
+            PopMatrix()
                             
         if self.color is not None: 
             self.orbit_image.color=self.color
@@ -170,20 +187,20 @@ class Star(object):
         self.snow_line = 3 * pow( self.luminosity ,0.5)
         self.ice_line = 10 * pow( self.luminosity ,0.5)
         
-        frac = 0.25
-        
-        self.image=Image(source='generic_sun.png',color=self.color,allow_stretch=True,size_hint=(None, None),size=(round(75*frac*self.radius), round(75*frac*self.radius)),pos_hint={'center_x':.5, 'center_y':.5})
-        
-        self.orbitimage = None #primary star doesn't orbit - would need barycenter calculation if multiple suns
-        #self.orbitimage = Image(source='generic_sun.png',color=self.color,allow_stretch=True,size_hint=(None, None),size=(round(75*frac*self.radius), round(75*frac*self.radius)),pos_hint={'center_x':.75, 'center_y':.5})
         
         self.orbiting_bodies = []
         
         self.view = systempanel.SystemView(primary=self)
+
+    def primary_image(self):
+        frac = 0.25        
+        return Image(source='generic_sun.png',color=self.color,allow_stretch=True,size_hint=(None, None),size=(round(75*frac*self.radius), round(75*frac*self.radius)),pos_hint={'center_x':.5, 'center_y':.5})
         
     def random_habitable_orbit(self):
         return (random.random()*0.6 + 0.8) * pow( self.luminosity ,0.5)
         
+    def is_habitable(self,orbit):
+        return self.habitable_start < orbit and orbit < self.habitable_end
     
     def info(self):
         out = self.type+'-type star, with mass of %.2f' % self.solar_masses + ' and luminosity of %.2f' % self.luminosity

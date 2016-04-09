@@ -14,19 +14,21 @@ import math
 from kivy.core.window import Window
 from kivy.graphics.context_instructions import Scale
 
+orbit_constant = 3.0
+
 class SystemView(ScrollView):
     def __init__(self, **kwargs):
         super(SystemView, self).__init__(**kwargs)
         self.map = FloatLayout(size=(2000,2000),size_hint = (None, None))
         self.add_widget(self.map)
         self.primary = kwargs['primary']
-        self.orbit_constant = 5.0 #scaling factor for map
+        self.orbit_constant = orbit_constant #scaling factor for map
         
         
         self.children = []
         #self.scale = None
         
-        self.map.add_widget(self.primary.image)      
+        self.map.add_widget(self.primary.primary_image())      
         self.scroll_x = 0.5
         self.scroll_y = 0.5
         #self.size=(1000,1000)          
@@ -42,7 +44,7 @@ class SystemView(ScrollView):
         if clear:
             self.map.clear_widgets()
             
-            self.map.add_widget(self.primary.image)             
+            self.map.add_widget(self.primary.primary_image())             
             
         self.map.canvas.before.clear() 
         
