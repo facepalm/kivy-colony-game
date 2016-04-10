@@ -25,3 +25,56 @@ Serif
 Garamond
 Babylon
 Kobold
+Yuggoth
+R'lyeh
+Ariel
+Beaumonde
+Bellerophon
+Haven
+Hera
+Higgins' Moon
+Jiangyin
+Lilac
+Miranda
+Osiris
+Persephone
+Regina
+Santo
+St. Albans
+Triumph
+Whitefall
+Aberdeen
+Angel
+Athens
+ Ares
+ Bernadette
+ Beylix
+ Boros
+ Constance
+ Deadwood
+ Dyton
+ Ezra
+ Greenleaf
+ Harvest
+ Heinlein
+ Highgate
+ Ita
+ Kerry
+ Liann Jiun
+ Londinium
+ Muir
+ Newhall
+ New Melbourne
+ Paquin
+ Parth
+ Pelorum
+Salisbury
+Silverhold
+ Shadow
+ Sihnon
+ Theophrastus
+ Three Hills
+ Verbena
+Whittier
+
+
