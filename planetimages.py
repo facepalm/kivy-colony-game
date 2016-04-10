@@ -1,6 +1,7 @@
 
 import random
 from kivy.uix.image import Image
+from kivy.properties import ListProperty
 
 #manager for planet images & icons
 planet_dict = { 'Brown-Dwarf': ['browndwarf'],
@@ -45,8 +46,8 @@ def random_image(planet):
         
     return img
 
-def load_primary(imagename):
-    img = Image(source=imagename,allow_stretch=True,size_hint=(None, None))   
+def load_primary(planet, imagename):
+    img = PlanetImage(source=imagename,allow_stretch=True,size_hint=(None, None),planet=planet)   
     sz = img.texture.size
     minlen= min(sz[0],sz[1])
     size = (round(100.0*sz[0]/minlen),round(100.0*sz[1]/minlen))        
@@ -54,13 +55,36 @@ def load_primary(imagename):
     #print imagename,img.size,img.texture.size
     return img
     
-def load_orbital(imagename,radius=1.0):
-    img = Image(source=imagename,allow_stretch=True,size_hint=(None, None))   
+def load_orbital(planet, imagename, radius=1.0):
+    img = PlanetImage(source=imagename,allow_stretch=True,size_hint=(None, None),planet=planet)   
     sz = img.texture.size
     minlen= min(sz[0],sz[1])
     size = (round(100.0*radius*sz[0]/minlen),round(100.0*radius*sz[1]/minlen))        
     img.size=size    
     #print imagename,img.size,img.texture.size
     return img    
+    
+class PlanetImage(Image):
+    def __init__(self,**kwargs):
+        super(PlanetImage, self).__init__(**kwargs)
+        self.planet = kwargs['planet']
+    
+    pressed = ListProperty([0, 0])
+        
+    def on_touch_down(self, touch):
+        touch.push()
+        touch.apply_transform_2d(self.to_widget)
+        touched = self.collide_point(*touch.pos)
+        touch.pop()
+        if touched:
+            self.pressed = touch.pos
+            # we consumed the touch. return False here to propagate
+            # the touch further to the children.
+            return True
+        return super(PlanetImage, self).on_touch_down(touch)
+
+    def on_pressed(self, instance, pos):
+        print ('Planet ',self.planet.name,', pressed at {pos}'.format(pos=pos))
+        
     
         

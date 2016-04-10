@@ -87,7 +87,7 @@ class Planet(object):
     
     def primary_image(self):
                 
-        return planetimages.load_primary(self.image)
+        return planetimages.load_primary(self, self.image)
         
         #Image(source=self.img_name,allow_stretch=True,size_hint=(None, None),size=(round(75*self.img_radius), round(75*self.img_radius)),pos_hint={'center_x':.5, 'center_y':.5})      
     
@@ -101,7 +101,7 @@ class Planet(object):
         
         orbit_dist = (float(math.log((self.orbit+1),orbit_scale))/(2.0*orbit_constant))
                   
-        self.orbit_image = planetimages.load_orbital(self.image,radius=self.img_radius)
+        self.orbit_image = planetimages.load_orbital(self, self.image,radius=self.img_radius)
         
         self.orbit_image.pos_hint = { 'center_x':.5+ math.cos(self.orbit_pos)*orbit_dist, \
                                       'center_y':.5+math.sin(self.orbit_pos)*orbit_dist}

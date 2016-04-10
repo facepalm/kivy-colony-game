@@ -40,6 +40,12 @@ class SystemView(ScrollView):
     def remove_child(self,obj):
         self.children.remove(obj)    
         
+    def on_touch_down(self, touch):
+        super(SystemView, self).on_touch_down(touch)
+        self.map.on_touch_down(touch)
+        return False
+           
+        
     def update(self,clear=True):
         if clear:
             self.map.clear_widgets()
