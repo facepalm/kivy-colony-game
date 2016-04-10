@@ -10,6 +10,7 @@ from kivy.uix.floatlayout import FloatLayout
 from kivy.graphics import Line, Color, Rotate, PushMatrix, PopMatrix
 
 import planetimages
+import planetresources
 
 def generate_planet(mass,sun,orbit):
     p = Planet(mass,sun,orbit)
@@ -61,6 +62,7 @@ class Planet(object):
             self.img_radius = 0.10
     
     
+        self.resources = planetresources.PlanetResources(self)
         self.initialize_sites()
         
         self.orbiting_bodies = []

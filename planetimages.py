@@ -85,6 +85,7 @@ class PlanetImage(Image):
 
     def on_pressed(self, instance, pos):
         print ('Planet ',self.planet.name,', pressed at {pos}'.format(pos=pos))
+        print self.planet.type, self.planet.resources.raw
         
     
         
