@@ -44,7 +44,12 @@ class SystemView(ScrollView):
         if clear:
             self.map.clear_widgets()
             
-            self.map.add_widget(self.primary.primary_image())             
+            self.map.add_widget(self.primary.primary_image())  
+            if self.primary.is_sun:
+                with self.map.canvas:  
+                    Color( 0.25, 0.5, 0.25 )            
+                    Line(circle=( self.map.size[0]/2, self.map.size[1]/2, 0.5*self.map.size[0]*float(math.log((self.primary.habitable_start+1),10)/self.orbit_constant)), dash_length=10, dash_offset = 10)
+                    Line(circle=( self.map.size[0]/2, self.map.size[1]/2, 0.5*self.map.size[0]*float(math.log((self.primary.habitable_end+1),10)/self.orbit_constant)), dash_length=10, dash_offset = 10)
             
         self.map.canvas.before.clear() 
         
@@ -54,6 +59,7 @@ class SystemView(ScrollView):
             #    #remove body's designation 
             #    #print "Stealing", body,"from", body.orbit_image.parent              
             #    body.orbit_image.parent.remove_widget(body.orbit_image)
+            
             if not body.orbit_image.parent:
                 ph = body.orbit_image.pos_hint
                 x = ((ph['center_x']-0.5)/self.orbit_constant + 0.5)
@@ -74,7 +80,7 @@ class SystemView(ScrollView):
                     #print self.to_window(self.center_x, self.center_y)
                     #print Window.size[0], self.size[0]
                     #print 1000*float(math.log((body.orbit+1),10)/2)
-                    Line(circle=( self.map.size[0]/2, self.map.size[1]/2, 0.5*self.map.size[0]*float(math.log((body.orbit+1),10)/self.orbit_constant)), dash_length=10, dash_offset = 10)
+                    Line(circle=( self.map.size[0]/2, self.map.size[1]/2, 0.5*self.map.size[0]*float(math.log((body.orbit+1),10)/self.orbit_constant)), dash_length=20, dash_offset = 10)
                     #print 0.5*self.map.size[0]*float(math.log((body.orbit+1),10)/2), (.5+ (float(math.log((body.orbit+1),10))/(2.0))), (.5+ (float(math.log((body.orbit+1),10))/(2.0)))*self.map.size[0]
                     
                 #with self.map.canvas:

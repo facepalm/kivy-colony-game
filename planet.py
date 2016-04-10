@@ -20,6 +20,7 @@ def generate_planet(mass,sun,orbit):
 
 class Planet(object):
     def __init__(self,mass=None,sun=None,orbit=None,name=None, logger=None):
+        self.is_sun = False
         self.mass = mass if mass else 1E8*random.random()
         self.name = name if name else util.planet_name(self)
         self.primary=sun
@@ -100,10 +101,14 @@ class Planet(object):
         
         orbit_dist = (float(math.log((self.orbit+1),orbit_scale))/(2.0*orbit_constant))
                   
-        self.orbit_image = Image(source=self.image,allow_stretch=True,size_hint=(None, None), \
+        self.orbit_image = planetimages.load_orbital(self.image,radius=self.img_radius)
+        
+        self.orbit_image.pos_hint = { 'center_x':.5+ math.cos(self.orbit_pos)*orbit_dist, \
+                                      'center_y':.5+math.sin(self.orbit_pos)*orbit_dist}
+        '''Image(source=self.image,allow_stretch=True,size_hint=(None, None), \
                             size=(round(75*self.img_radius), round(75*self.img_radius)), pos_hint={\
                             'center_x':.5+ math.cos(self.orbit_pos)*orbit_dist, \
-                            'center_y':.5+math.sin(self.orbit_pos)*orbit_dist})
+                            'center_y':.5+math.sin(self.orbit_pos)*orbit_dist})'''
         with self.orbit_image.canvas.before:
             PushMatrix()
             #Rotate(angle=self.orbit_pos*180/3.14159, origin = self.orbit_image.center)           
@@ -121,6 +126,7 @@ class Planet(object):
     
 class Star(object):
     def __init__(self, solar_masses, name=None, logger=None):
+        self.is_sun = True
         self.solar_masses = solar_masses
         self.mass = self.solar_masses*2E30
         self.name = name if name else util.star_name(self)
