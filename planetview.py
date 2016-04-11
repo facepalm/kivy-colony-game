@@ -11,12 +11,15 @@ from kivy.uix.scrollview import ScrollView
 from kivy.uix.widget import Widget
 
 import math
+import numpy as np
 
 from kivy.core.window import Window
 from kivy.graphics.context_instructions import Scale
 from kivy.lang import Builder
 
 import globalvars
+import matplotlib.pyplot as plt
+import planetresources
 
 kv = '''
 <PlanetPanel>:
@@ -37,8 +40,8 @@ kv = '''
             pos: self.pos
             size: self.size
     BoxLayout:
-        size_hint: None, None
-        size: 150, 150
+        size_hint: 0.2, 0.2
+
         canvas:
             Color:
                 rgb: (0.5, 0.5, 0.5)
@@ -76,6 +79,18 @@ class PlanetPanel(StackLayout):
 
         self._keyboard = Window.request_keyboard(self._keyboard_closed, self)
         self._keyboard.bind(on_key_down=self._on_keyboard_down)
+        
+        '''pr = self.planet.resources.raw.squeeze()
+        x = np.arange(0,2*math.pi,0.2*math.pi)
+        x = np.append(x,0)
+        pr = np.append(pr,pr[0])
+        print x, pr
+        plt.polar(x,pr,'b')
+        plt.fill_between(x,pr,color='#5c7de8',alpha=0.75)
+        plt.thetagrids(np.arange(0,360,36),planetresources.raw_names)
+        plt.ylim(0,1)
+        plt.yticks([2.0])
+        plt.show()'''
         
     def on_touch_down(self, touch):
         touch.push()
