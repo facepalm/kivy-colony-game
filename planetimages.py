@@ -67,6 +67,22 @@ def load_orbital(planet, imagename, radius=1.0):
     #print imagename,img.size,img.texture.size
     return img    
     
+def load_panel(planet, imagename):
+    img = PlanetImage(source=imagename,allow_stretch=True,size_hint=(None, None),planet=planet)   
+    sz = img.texture.size
+    minlen= min(sz[0],sz[1])
+    size = (round(400.0*sz[0]/minlen),round(400.0*sz[1]/minlen))        
+    img.size=size    
+    
+    with img.canvas.before:
+        #PushMatrix()              
+        Rotate(angle=135, origin = img.center) 
+            
+    #with img.canvas.after:
+        #PopMatrix()
+    
+    return img     
+    
 class PlanetImage(Image):
     def __init__(self,**kwargs):
         super(PlanetImage, self).__init__(**kwargs)
@@ -88,7 +104,7 @@ class PlanetImage(Image):
 
     def on_pressed(self, instance, pos):
         print ('Planet ',self.planet.name,', pressed at {pos}'.format(pos=pos))
-        print self.planet.type, self.planet.resources.raw
+        print self.planet.type, self.planet.resources.raw, self.planet.subtype if hasattr(self.planet,'subtype') else ''
         print globalvars.root
         p = planetview.PlanetPanel(planet=self.planet)
         globalvars.root.add_widget(p)

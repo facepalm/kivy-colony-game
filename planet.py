@@ -95,7 +95,10 @@ class Planet(object):
     
         if self.color is not None: 
             self.image.color=self.color
-            
+   
+    def mugshot_image(self):                
+        return planetimages.load_panel(self, self.image)
+        
     
     def generate_orbital_image(self):
         orbit_scale = 10

@@ -22,26 +22,57 @@ kv = '''
 <PlanetPanel>:
     size_hint: 0.8, 0.8
     pos_hint: {'center_x': .5, 'center_y': .5}
+    id: panel
     canvas:
         Color:
             rgb: (0.05, 0.05, 0.05)
         Rectangle:
             size: self.size
-            pos: self.pos
+            pos: self.pos  
         Color:
-            rgb: (0.25, 0.25, 0.5)
-        Line:
-            rectangle: self.x,self.y,self.width,self.height
-            width: 2
-    
+            rgb: (0.5, 0.5, 0.75)  
+        BorderImage:
+            border: 10,10,10,10
+            source: 'images/kivy/button_white.png'
+            pos: self.pos
+            size: self.size
+    BoxLayout:
+        size_hint: None, None
+        size: 150, 150
+        canvas:
+            Color:
+                rgb: (0.5, 0.5, 0.5)
+            BorderImage:
+                border: 5,5,5,5
+                source: 'images/kivy/button_white.png'
+                pos: self.pos
+                size: self.size
+        Image:
+            size_hint: 0.9, 0.9
+            pos_hint: {'center_x': .5, 'center_y': .5}
+            source: panel.planet.image
+            
+        
+    BoxLayout:
+        size_hint_y: None
+        height: sp(100)
+        canvas:
+            Color:
+                rgb: (0.05, 0.15, 0.05)
+            Rectangle:
+                size: self.size
+                pos: self.pos                  
+        
 '''
+
 
 Builder.load_string(kv)
 
 class PlanetPanel(StackLayout):
     def __init__(self, **kwargs):
-        super(PlanetPanel, self).__init__(**kwargs)
         self.planet = kwargs['planet']
+        super(PlanetPanel, self).__init__(**kwargs)
+        
 
         self._keyboard = Window.request_keyboard(self._keyboard_closed, self)
         self._keyboard.bind(on_key_down=self._on_keyboard_down)
