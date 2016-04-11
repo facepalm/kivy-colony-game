@@ -16,10 +16,11 @@ class GameApp(App):
 
     def build(self):
         root = AnchorLayout()
+        globalvars.root = root
         autoloaded = util.autoload() if globalvars.config['AUTOLOAD'] else False
                 
         #root.add_widget( Image( source = 'generic_sun.png'))#'NGC134_70wendel1024.jpg' ) )  
-        
+                
             
                 
         if not autoloaded:

@@ -3,6 +3,9 @@ import random
 from kivy.uix.image import Image
 from kivy.properties import ListProperty
 
+import globalvars
+import planetview
+
 #manager for planet images & icons
 planet_dict = { 'Brown-Dwarf': ['browndwarf'],
                 'Gas' : ['cloud0','gas5','gas1','gas2','gas4','gas7','cloud5','cloud7'],
@@ -86,6 +89,9 @@ class PlanetImage(Image):
     def on_pressed(self, instance, pos):
         print ('Planet ',self.planet.name,', pressed at {pos}'.format(pos=pos))
         print self.planet.type, self.planet.resources.raw
+        print globalvars.root
+        p = planetview.PlanetPanel(planet=self.planet)
+        globalvars.root.add_widget(p)
         
     
         

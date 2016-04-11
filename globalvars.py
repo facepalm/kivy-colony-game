@@ -28,4 +28,5 @@ load_config()
 
 scenario = None
 universe = None
+root = None
 mousedown=False
