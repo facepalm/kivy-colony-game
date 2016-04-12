@@ -40,7 +40,7 @@ kv = '''
             pos: self.pos
             size: self.size
     BoxLayout:
-        size_hint: 0.2, 0.2
+        size_hint: 0.25, 0.25
 
         canvas:
             Color:
@@ -51,9 +51,22 @@ kv = '''
                 pos: self.pos
                 size: self.size
         Image:
-            size_hint: 0.9, 0.9
+            size_hint: 1, 1
             pos_hint: {'center_x': .5, 'center_y': .5}
             source: panel.planet.image
+    BoxLayout:
+        orientation: 'vertical'
+        size_hint: 0.75, 0.25
+        padding: 10, 10, 10, 10
+        Label:
+            text: panel.planet.type + ' "' + panel.planet.name + '"'
+            font_size: 24
+        Label:
+            text: "Orbit: %.2f AU" % panel.planet.orbit
+            font_size: 16
+        Label:
+            text: "{0:.0f} % explored".format(100*panel.planet.exploration)
+            font_size: 16
             
         
     BoxLayout:
