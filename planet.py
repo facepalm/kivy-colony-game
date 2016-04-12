@@ -9,6 +9,7 @@ from kivy.uix.image import Image
 from kivy.uix.floatlayout import FloatLayout
 from kivy.graphics import Line, Color, Rotate, PushMatrix, PopMatrix
 
+import globalvars
 import planetimages
 import planetresources
 
@@ -206,6 +207,7 @@ class Star(object):
         self.orbiting_bodies = []
         
         self.view = systempanel.SystemView(primary=self)
+        globalvars.root.add_widget(self.view)
 
     def primary_image(self):
         frac = 0.25        

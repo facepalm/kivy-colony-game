@@ -10,6 +10,7 @@ from kivy.uix.scrollview import ScrollView
 from kivy.uix.widget import Widget
 
 import math
+import globalvars
 
 from kivy.core.window import Window
 from kivy.graphics.context_instructions import Scale
@@ -23,9 +24,6 @@ class SystemView(ScrollView):
         self.add_widget(self.map)
         self.primary = kwargs['primary']
         self.orbit_constant = orbit_constant #scaling factor for map
-        
-        
-        self.children = []
         #self.scale = None
         
         self.map.add_widget(self.primary.primary_image())      
@@ -33,13 +31,11 @@ class SystemView(ScrollView):
         self.scroll_y = 0.5
         #self.size=(1000,1000)          
         #self.size_hint=(1,1)
-                
-    def add_child(self,_list=[]):        
-        self.children.extend(_list)
-           
-    def remove_child(self,obj):
-        self.children.remove(obj)    
         
+        #globalvars.root.add_widget(self)
+         
+        Window.bind(on_keyboard=self.onBackBtn)        
+
     def on_touch_down(self, touch):
         super(SystemView, self).on_touch_down(touch)
         self.map.on_touch_down(touch)
@@ -53,11 +49,16 @@ class SystemView(ScrollView):
             self.map.add_widget(self.primary.primary_image())  
             if self.primary.is_sun:
                 with self.map.canvas:  
+                               
                     Color( 0.25, 0.5, 0.25 )            
                     Line(circle=( self.map.size[0]/2, self.map.size[1]/2, 0.5*self.map.size[0]*float(math.log((self.primary.habitable_start+1),10)/self.orbit_constant)), dash_length=10, dash_offset = 10)
                     Line(circle=( self.map.size[0]/2, self.map.size[1]/2, 0.5*self.map.size[0]*float(math.log((self.primary.habitable_end+1),10)/self.orbit_constant)), dash_length=10, dash_offset = 10)
+    
+        self.map.canvas.before.clear()            
+        with self.map.canvas.before:
             
-        self.map.canvas.before.clear() 
+            Color( 0,0,0 )
+            Rectangle(pos=self.map.pos,size=self.map.size) 
         
         for body in self.primary.orbiting_bodies:
             body.generate_orbital_image()
@@ -100,5 +101,14 @@ class SystemView(ScrollView):
         #self.map.canvas.before.insert(0,Scale( 1/self.orbit_constant, 1/self.orbit_constant, 1.0, origin = (self.map.size[0]/2,self.map.size[1]/2)))
         #self.map.canvas.before.add(Line(circle=( 1000, 1000, 100)))
 
+
+    def onBackBtn(self, window, key, *args):
+        """ To be called whenever user presses Back/Esc Key """
+        # If user presses Back/Esc Key
+        if key == 27 or key == 1001:
+            if self in globalvars.root.children:
+                globalvars.root.remove_widget(self)
+                return True
+        return False
             
-            
+        

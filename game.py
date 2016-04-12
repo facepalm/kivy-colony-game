@@ -41,5 +41,7 @@ class Universe(object):
         newp = planet.generate_planet(random.random()*9E24 + 1E24,self.primary,self.primary.random_habitable_orbit())
         self.planets.extend(newp)    
         
+        
         self.primary.view.update()
+
         

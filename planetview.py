@@ -90,9 +90,8 @@ class PlanetPanel(StackLayout):
         super(PlanetPanel, self).__init__(**kwargs)
         
 
-        self._keyboard = Window.request_keyboard(self._keyboard_closed, self)
-        self._keyboard.bind(on_key_down=self._on_keyboard_down)
-        
+        Window.bind(on_keyboard=self.onBackBtn)        
+
         '''pr = self.planet.resources.raw.squeeze()
         x = np.arange(0,2*math.pi,0.2*math.pi)
         x = np.append(x,0)
@@ -112,19 +111,14 @@ class PlanetPanel(StackLayout):
         touch.pop()
         if not touched:
             globalvars.root.remove_widget(self)
-            #self._keyboard_closed()
             return True
                   
-    def _keyboard_closed(self):
-        if self._keyboard: self._keyboard.unbind(on_key_down=self._on_keyboard_down)
-        self._keyboard = None    
-        
-    def _on_keyboard_down(self, keyboard, keycode, text, modifiers):
-        keycode1 = keycode[0]
-        
-        if keycode1 == 27 or keycode1 == 1001:            
-            globalvars.root.remove_widget(self)
-            self._keyboard_closed()
-            return True
-        return False               
-            
+    def onBackBtn(self, window, key, *args):
+        """ To be called whenever user presses Back/Esc Key """
+        # If user presses Back/Esc Key
+        if key == 27 or key == 1001:
+            if self in globalvars.root.children:
+                globalvars.root.remove_widget(self)
+                return True
+        return False                  
+                  
