@@ -56,7 +56,7 @@ kv = '''
             source: panel.planet.image
     BoxLayout:
         orientation: 'vertical'
-        size_hint: 0.75, 0.25
+        size_hint: 0.5, 0.25
         padding: 10, 10, 10, 10
         Label:
             text: panel.planet.type + ' "' + panel.planet.name + '"'
@@ -67,7 +67,8 @@ kv = '''
         Label:
             text: "{0:.0f} % explored".format(100*panel.planet.exploration)
             font_size: 16
-            
+
+                
         
     BoxLayout:
         size_hint_y: None
