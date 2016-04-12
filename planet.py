@@ -39,8 +39,10 @@ class Planet(object):
             self.type = 'INVALID' #actually a sun.  Throw an error, this shouldnt happen
         elif self.mass > 1E28: 
             self.type = 'Brown dwarf' #counting this as a planet, since they have negligible radiation    
+            self.img_radius = 0.5
         elif self.mass > 1E26:
             self.type = 'Gas giant'
+            self.img_radius = 0.5
             '''if self.orbit < self.sun.ice_line:
                 self.type = 'Gas giant' 
                 saturation = 255.0
@@ -56,10 +58,12 @@ class Planet(object):
             self.type = 'Planet' #rocky world, but capable of retaining an atmosphere, even if barely
         elif self.mass > 1E21:
             self.type = 'Dwarf planet' #larger moons and asteroids, rounded
+            self.img_radius = 0.2
         else:
             self.type = 'Planetoid' #small moons, asteroids, rocks, etc
             self.img_name = 'generic_asteroid.png'
             self.img_radius = 0.10
+    
     
     
         self.resources = planetresources.PlanetResources(self)
