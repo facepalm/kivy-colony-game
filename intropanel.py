@@ -8,11 +8,14 @@ from kivy.uix.scrollview import ScrollView
 from kivy.uix.label import Label
 from kivy.uix.widget import Widget
 from kivy.graphics import Color, Rectangle
+from kivy.core.window import Window
 
+import globalvars
 
 class ScrollView(ScrollView):
     def __init__(self, **kwargs):
         super(ScrollView, self).__init__(**kwargs)
+           
         with self.canvas.before:
             self.color = Color(0.20,0.20,0.20)
             self.rect = Rectangle(pos=self.pos, size=self.size)
@@ -57,7 +60,7 @@ It will have to do.[/color]
 
     def __init__(self, **kwargs):
         super(IntroPanelView, self).__init__(**kwargs)
-        
+        Window.bind(on_keyboard=self.onBackBtn) 
         
         # create a default grid layout with custom width/height
         layout = GridLayout(cols=1, padding=10, spacing=10,
@@ -88,4 +91,13 @@ It will have to do.[/color]
         
     def close(self, instance):
         self.parent.remove_widget(self)
+        
+    def onBackBtn(self, window, key, *args):
+        """ To be called whenever user presses Back/Esc Key """
+        # If user presses Back/Esc Key
+        if key == 27 or key == 1001:
+            if self in globalvars.root.children:
+                globalvars.root.remove_widget(self)
+                return True
+        return False    
 

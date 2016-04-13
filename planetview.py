@@ -67,7 +67,12 @@ kv = '''
         Label:
             text: "{0:.0f} % explored".format(100*panel.planet.exploration)
             font_size: 16
-
+    FloatLayout:
+        size_hint: 0.25, 0.25
+        Button:
+            size_hint: 0.90, 0.90
+            pos_hint: {'center_x': .5, 'center_y': .5}
+            text: "View"
                 
         
     BoxLayout:
