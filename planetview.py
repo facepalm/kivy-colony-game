@@ -121,7 +121,7 @@ class PlanetPanel(StackLayout):
         plt.yticks([2.0])
         plt.show()'''
         
-    '''def on_touch_down(self, touch):
+    def on_touch_down(self, touch):
         touch.push()
         touch.apply_transform_2d(self.to_widget)
         touched = self.collide_point(*touch.pos)
@@ -131,7 +131,7 @@ class PlanetPanel(StackLayout):
             return True
         else:
             return super(PlanetPanel, self).on_touch_down(touch)
-            #return True'''
+            #return True
                   
     def onBackBtn(self, window, key, *args):
         """ To be called whenever user presses Back/Esc Key """
