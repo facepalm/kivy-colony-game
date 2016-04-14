@@ -4,6 +4,7 @@ kivy.require('1.9.2')
 from kivy.uix.floatlayout import FloatLayout
 from kivy.uix.anchorlayout import AnchorLayout
 from kivy.uix.stacklayout import StackLayout
+from kivy.uix.boxlayout import BoxLayout
 
 from kivy.uix.relativelayout import RelativeLayout
 from kivy.graphics import Line, Color, Rectangle
@@ -20,82 +21,81 @@ from kivy.lang import Builder
 import globalvars
 import matplotlib.pyplot as plt
 import planetresources
+import siteview
 
 kv = '''
 <PlanetPanel>:
-    size_hint: 0.8, 0.8
+    size_hint: None, None
+    size: app.root_window.width*0.8,app.root_window.height*0.8
     pos_hint: {'center_x': .5, 'center_y': .5}
+    do_scroll_x: False
     id: panel
-    canvas:
-        Color:
-            rgb: (0.05, 0.05, 0.05)
-        Rectangle:
-            size: self.size
-            pos: self.pos  
-        Color:
-            rgb: (0.5, 0.5, 0.75)  
-        BorderImage:
-            border: 10,10,10,10
-            source: 'images/kivy/button_white.png'
-            pos: self.pos
-            size: self.size
-    BoxLayout:
-        size_hint: 0.25, 0.25
-
+    StackLayout:
+        id: panel2
+        size_hint: 1, 1
         canvas:
             Color:
-                rgb: (0.5, 0.5, 0.5)
+                rgb: (0.05, 0.05, 0.05)
+            Rectangle:
+                size: self.size
+                pos: self.pos  
+            Color:
+                rgb: (0.5, 0.5, 0.75)  
             BorderImage:
-                border: 5,5,5,5
+                border: 10,10,10,10
                 source: 'images/kivy/button_white.png'
                 pos: self.pos
                 size: self.size
-        Image:
-            size_hint: 1, 1
-            pos_hint: {'center_x': .5, 'center_y': .5}
-            source: panel.planet.image
-    BoxLayout:
-        orientation: 'vertical'
-        size_hint: 0.5, 0.25
-        padding: 10, 10, 10, 10
-        Label:
-            text: panel.planet.type + ' "' + panel.planet.name + '"'
-            font_size: 24
-        Label:
-            text: "Orbit: %.2f AU" % panel.planet.orbit
-            font_size: 16
-        Label:
-            text: "{0:.0f} % explored".format(100*panel.planet.exploration)
-            font_size: 16
-    FloatLayout:
-        size_hint: 0.25, 0.25
-        Button:
-            size_hint: 0.90, 0.90
-            pos_hint: {'center_x': .5, 'center_y': .5}
-            text: "View"
-                
-        
-    BoxLayout:
-        size_hint_y: None
-        height: sp(100)
-        canvas:
-            Color:
-                rgb: (0.05, 0.15, 0.05)
-            Rectangle:
-                size: self.size
-                pos: self.pos                  
-        
+        BoxLayout:
+            size_hint: 0.25, 0.25
+
+            canvas:
+                Color:
+                    rgb: (0.5, 0.5, 0.5)
+                BorderImage:
+                    border: 5,5,5,5
+                    source: 'images/kivy/button_white.png'
+                    pos: self.pos
+                    size: self.size
+            Image:
+                size_hint: 1, 1
+                pos_hint: {'center_x': .5, 'center_y': .5}
+                source: panel.planet.image
+        BoxLayout:
+            orientation: 'vertical'
+            size_hint: 0.5, 0.25
+            padding: 10, 10, 10, 10
+            Label:
+                text: panel.planet.type + ' "' + panel.planet.name + '"'
+                font_size: 24
+            Label:
+                text: "Orbit: %.2f AU" % panel.planet.orbit
+                font_size: 16
+            Label:
+                text: "{0:.0f} % explored".format(100*panel.planet.exploration)
+                font_size: 16
+        FloatLayout:
+            size_hint: 0.25, 0.25
+            Button:
+                size_hint: 0.90, 0.90
+                pos_hint: {'center_x': .5, 'center_y': .5}
+                text: "View"                                
+            
 '''
 
 
 Builder.load_string(kv)
 
-class PlanetPanel(StackLayout):
+class PlanetPanel(ScrollView):
     def __init__(self, **kwargs):
         self.planet = kwargs['planet']
         super(PlanetPanel, self).__init__(**kwargs)
         
-
+        for s in self.planet.sites:    
+            b = BoxLayout(size_hint_y =None,height=80)
+            b.add_widget(s.small_view())
+            self.ids['panel2'].add_widget(b)
+            
         Window.bind(on_keyboard=self.onBackBtn)        
 
         '''pr = self.planet.resources.raw.squeeze()
@@ -110,7 +110,7 @@ class PlanetPanel(StackLayout):
         plt.yticks([2.0])
         plt.show()'''
         
-    def on_touch_down(self, touch):
+    '''def on_touch_down(self, touch):
         touch.push()
         touch.apply_transform_2d(self.to_widget)
         touched = self.collide_point(*touch.pos)
@@ -118,6 +118,9 @@ class PlanetPanel(StackLayout):
         if not touched:
             globalvars.root.remove_widget(self)
             return True
+        else:
+            return super(PlanetPanel, self).on_touch_down(touch)
+            #return True'''
                   
     def onBackBtn(self, window, key, *args):
         """ To be called whenever user presses Back/Esc Key """

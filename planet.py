@@ -12,6 +12,7 @@ from kivy.graphics import Line, Color, Rotate, PushMatrix, PopMatrix
 import globalvars
 import planetimages
 import planetresources
+import planetsite
 
 def generate_planet(mass,sun,orbit):
     p = Planet(mass,sun,orbit)
@@ -88,8 +89,17 @@ class Planet(object):
         self.view = systempanel.SystemView(primary=self)
         
     def initialize_sites(self):
-        self.sites = 6 if self.type == 'Planet' else 2 if self.type == 'Dwarf planet' else 1 if self.type == 'Planetoid' else 0
-        self.orbits = 1
+        self.sites=[]
+        self.num_sites = 6 if self.type == 'Planet' else 2 if self.type == 'Dwarf planet' else 1 if self.type == 'Planetoid' else 0
+        #print dir(site)
+        for s in range(self.num_sites):
+            s1 = planetsite.Site(self,'Site'+str(s))
+            self.sites.append(s1)
+        self.num_orbits = 1
+        for s in range(self.num_orbits):
+            s1 = planetsite.Site(self,'Orbit'+str(s))
+            self.sites.append(s1)
+        
         #print self.sites, self.orbits
     
     def primary_image(self):
