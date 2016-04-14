@@ -28,7 +28,7 @@ entry_small_kv = '''
         Color:
             rgb: (0.05, 0.05, 0.15)
         Rectangle:
-            size: self.size[0], self.size[1]*0.8
+            size: self.size[0], self.size[1]*0.9
             pos: self.pos      
 '''
 

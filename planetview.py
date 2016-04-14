@@ -25,10 +25,10 @@ import siteview
 
 kv = '''
 <PlanetPanel>:
-    size_hint: None, None
-    size: app.root_window.width*0.8,app.root_window.height*0.8
+    size_hint: 0.8, 0.8
+    #size: app.root_window.width*0.8,app.root_window.height*0.8
     pos_hint: {'center_x': .5, 'center_y': .5}
-    do_scroll_x: False
+    
     id: panel
     StackLayout:
         id: panel2
@@ -80,21 +80,32 @@ kv = '''
                 size_hint: 0.90, 0.90
                 pos_hint: {'center_x': .5, 'center_y': .5}
                 text: "View"                                
+        ScrollView:
+            do_scroll_x: False
+            pos_hint: {'center_x': .5, 'center_y': .5}
+            size_hint: 1, 0.75
+            
+            BoxLayout:
+                pos_hint: {'center_x': .5, 'center_y': .5}
+                orientation: 'vertical'
+                id: panel3
+                size_hint_y: None
+                height: 100*len(panel.planet.sites)
             
 '''
 
 
 Builder.load_string(kv)
 
-class PlanetPanel(ScrollView):
+class PlanetPanel(StackLayout):
     def __init__(self, **kwargs):
         self.planet = kwargs['planet']
         super(PlanetPanel, self).__init__(**kwargs)
         
         for s in self.planet.sites:    
-            b = BoxLayout(size_hint_y =None,height=80)
+            b = BoxLayout(size_hint_y =None,height=100)
             b.add_widget(s.small_view())
-            self.ids['panel2'].add_widget(b)
+            self.ids['panel3'].add_widget(b)
             
         Window.bind(on_keyboard=self.onBackBtn)        
 
