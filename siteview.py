@@ -64,8 +64,6 @@ entry_small_kv = '''
         opacity: 0.1 if not entry.site.mine[7] else 1.0        
     MineLoc:
         opacity: 0.1 if not entry.site.mine[8] else 1.0            
-    MineLoc:
-        opacity: 0.1 if not entry.site.mine[9] else 1.0         
     Label:
         text: "End"       
 '''

@@ -53,6 +53,9 @@ class SystemView(ScrollView):
                     Color( 0.25, 0.5, 0.25 )            
                     Line(circle=( self.map.size[0]/2, self.map.size[1]/2, 0.5*self.map.size[0]*float(math.log((self.primary.habitable_start+1),10)/self.orbit_constant)), dash_length=10, dash_offset = 10)
                     Line(circle=( self.map.size[0]/2, self.map.size[1]/2, 0.5*self.map.size[0]*float(math.log((self.primary.habitable_end+1),10)/self.orbit_constant)), dash_length=10, dash_offset = 10)
+                    
+                    Color( 0.25, 0.25, 0.5 )
+                    Line(circle=( self.map.size[0]/2, self.map.size[1]/2, 0.5*self.map.size[0]*float(math.log((self.primary.snow_line+1),10)/self.orbit_constant)), dash_length=10, dash_offset = 10)
     
         self.map.canvas.before.clear()            
         with self.map.canvas.before:
