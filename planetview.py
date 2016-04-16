@@ -88,6 +88,7 @@ kv = '''
         Image:
             source: 'temp.png'
             size_hint: 0.25, 0.25
+            id: resimg
             #pos_hint: {'center_x': .5, 'center_y': .5}
                 
         ScrollView:
@@ -126,7 +127,7 @@ class PlanetPanel(StackLayout):
         plt.yticks([2.0])
         
         plt.savefig('temp.png',bbox_inches='tight',dpi=300)
-        #plt.clf()
+        plt.clf()
         #im = plt.imread('temp.png')
         #width=250
         #self.imbuf = im[300-width:300+width,410-width:410+width,:]
@@ -138,6 +139,8 @@ class PlanetPanel(StackLayout):
         #plt.show()
         
         super(PlanetPanel, self).__init__(**kwargs)
+        
+        self.ids['resimg'].reload()
         
         for s in self.planet.sites:    
             b = BoxLayout(size_hint_y =None,height=100)
