@@ -15,7 +15,9 @@ class Site(object):
         if self.effective_resources.sum() > 0: self.effective_resources /= sum(self.effective_resources)
         
         self.mine_init = np.random.random(planetresources.raw_num)
-        self.mine = self.mine_init < (self.resources/2)
+        self.mine = self.mine_init/(self.resources/1.5)  #self.mine_init < (self.resources/2)
+        
+        self.explored = self.planet.explored
         
         print self.planet.name, self.location, self.effective_resources, self.mine
         

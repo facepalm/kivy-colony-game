@@ -9,6 +9,7 @@ import naming
 import sys
 import random
 
+
 #TIME_FACTOR = 168 # 1 irl hour = 1 week
 #TIME_FACTOR = 24 # 1 irl hour = 1 day
 #TIME_FACTOR = 120
@@ -93,6 +94,12 @@ def planet_name(planet=None,planet_type=None):
 
 def star_name(star=None):
     return "Placeholder Star"
+
+def fig2rgb_array(fig):
+    fig.canvas.draw()
+    buf = fig.canvas.tostring_rgb()
+    ncols, nrows = fig.canvas.get_width_height()
+    return np.fromstring(buf, dtype=np.uint8).reshape(nrows, ncols, 3)
 
 generic_logger=logging.getLogger("SystemLog")
 generic_logger.setLevel(logging.DEBUG)

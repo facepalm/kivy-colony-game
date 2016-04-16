@@ -8,11 +8,15 @@ from kivy.uix.boxlayout import BoxLayout
 
 from kivy.uix.relativelayout import RelativeLayout
 from kivy.graphics import Line, Color, Rectangle
+from kivy.graphics.texture import Texture
 from kivy.uix.scrollview import ScrollView
 from kivy.uix.widget import Widget
 
 import math
 import numpy as np
+
+from matplotlib.backends.backend_agg import FigureCanvasAgg as FigureCanvas
+from matplotlib.figure import Figure
 
 from kivy.core.window import Window
 from kivy.graphics.context_instructions import Scale
@@ -22,6 +26,7 @@ import globalvars
 import matplotlib.pyplot as plt
 import planetresources
 import siteview
+import util
 
 kv = '''
 <PlanetPanel>:
@@ -72,14 +77,19 @@ kv = '''
                 text: "Orbit: %.2f AU" % panel.planet.orbit
                 font_size: 16
             Label:
-                text: "{0:.0f} % explored".format(100*panel.planet.exploration)
+                text: "{0:.0f} % explored".format(100*panel.planet.explored)
                 font_size: 16
-        FloatLayout:
+        #FloatLayout:
+        #    size_hint: 0.25, 0.25
+            #Button:
+            #    size_hint: 0.90, 0.90
+            #    pos_hint: {'center_x': .5, 'center_y': .5}
+            #    text: "View"                                
+        Image:
+            source: 'temp.png'
             size_hint: 0.25, 0.25
-            Button:
-                size_hint: 0.90, 0.90
-                pos_hint: {'center_x': .5, 'center_y': .5}
-                text: "View"                                
+            #pos_hint: {'center_x': .5, 'center_y': .5}
+                
         ScrollView:
             do_scroll_x: False
             pos_hint: {'center_x': .5, 'center_y': .5}
@@ -100,26 +110,45 @@ Builder.load_string(kv)
 class PlanetPanel(StackLayout):
     def __init__(self, **kwargs):
         self.planet = kwargs['planet']
+        
+        
+        nr = 1.0*planetresources.raw_num
+        pr = self.planet.resources.raw.squeeze()
+        x = np.arange(0,2*math.pi,(2/nr)*math.pi)
+        x = np.append(x,0)
+        pr = np.append(pr,pr[0])
+        print x, pr
+        
+        plt.polar(x,pr,'b')
+        plt.fill_between(x,pr,color='#5c7de8',alpha=0.75)
+        plt.thetagrids(np.arange(0,360,360/nr),[])#planetresources.raw_names)
+        plt.ylim(0,1)
+        plt.yticks([2.0])
+        
+        plt.savefig('temp.png',bbox_inches='tight',dpi=300)
+        #plt.clf()
+        #im = plt.imread('temp.png')
+        #width=250
+        #self.imbuf = im[300-width:300+width,410-width:410+width,:]
+        #self.imtex = Texture.create(size=(500,500), colorfmt='rgba')
+        #self.imtex.blit_buffer(self.imbuf.tostring(), colorfmt='rgba', bufferfmt='ubyte')
+
+        #plt.imshow(im[300-width:300+width,410-width:410+width,:])
+        #plt.savefig('temp.png')
+        #plt.show()
+        
         super(PlanetPanel, self).__init__(**kwargs)
         
         for s in self.planet.sites:    
             b = BoxLayout(size_hint_y =None,height=100)
             b.add_widget(s.small_view())
             self.ids['panel3'].add_widget(b)
+                      
             
         Window.bind(on_keyboard=self.onBackBtn)        
 
-        '''pr = self.planet.resources.raw.squeeze()
-        x = np.arange(0,2*math.pi,0.2*math.pi)
-        x = np.append(x,0)
-        pr = np.append(pr,pr[0])
-        print x, pr
-        plt.polar(x,pr,'b')
-        plt.fill_between(x,pr,color='#5c7de8',alpha=0.75)
-        plt.thetagrids(np.arange(0,360,36),planetresources.raw_names)
-        plt.ylim(0,1)
-        plt.yticks([2.0])
-        plt.show()'''
+        
+        
         
     def on_touch_down(self, touch):
         touch.push()

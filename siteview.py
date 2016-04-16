@@ -47,23 +47,23 @@ entry_small_kv = '''
         text: entry.site.location    
     
     MineLoc:
-        opacity: 0.1 if not entry.site.mine[0] else 1.0
+        opacity: 0.1 if entry.site.mine[0] > entry.site.explored else 1.0
     MineLoc:
-        opacity: 0.1 if not entry.site.mine[1] else 1.0
+        opacity: 0.1 if entry.site.mine[1] > entry.site.explored else 1.0
     MineLoc:
-        opacity: 0.1 if not entry.site.mine[2] else 1.0
+        opacity: 0.1 if entry.site.mine[2] > entry.site.explored else 1.0
     MineLoc:
-        opacity: 0.1 if not entry.site.mine[3] else 1.0        
+        opacity: 0.1 if entry.site.mine[3] > entry.site.explored else 1.0        
     MineLoc:
-        opacity: 0.1 if not entry.site.mine[4] else 1.0                    
+        opacity: 0.1 if entry.site.mine[4] > entry.site.explored else 1.0                    
     MineLoc:
-        opacity: 0.1 if not entry.site.mine[5] else 1.0        
+        opacity: 0.1 if entry.site.mine[5] > entry.site.explored else 1.0        
     MineLoc:
-        opacity: 0.1 if not entry.site.mine[6] else 1.0                        
+        opacity: 0.1 if entry.site.mine[6] > entry.site.explored else 1.0                        
     MineLoc:
-        opacity: 0.1 if not entry.site.mine[7] else 1.0        
+        opacity: 0.1 if entry.site.mine[7] > entry.site.explored else 1.0        
     MineLoc:
-        opacity: 0.1 if not entry.site.mine[8] else 1.0            
+        opacity: 0.1 if entry.site.mine[8] > entry.site.explored else 1.0            
     Label:
         text: "End"       
 '''

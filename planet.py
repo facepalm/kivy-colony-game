@@ -67,7 +67,7 @@ class Planet(object):
             self.img_radius = 0.10
     
     
-        self.exploration = 0.1
+        self.explored = 0.3
         self.resources = planetresources.PlanetResources(self)
         self.initialize_sites()
         
