@@ -19,7 +19,7 @@ class Site(object):
         
         self.explored = self.planet.explored
         
-        print self.planet.name, self.location, self.effective_resources, self.mine
+        #print self.planet.name, self.location, self.effective_resources, self.mine
         
     def small_view(self):
         return siteview.SiteEntrySmall(site=self)        

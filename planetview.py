@@ -120,14 +120,15 @@ class PlanetPanel(StackLayout):
         pr = np.append(pr,pr[0])
         print x, pr
         
-        plt.polar(x,pr,'b')
+        '''plt.polar(x,pr,'b')
         plt.fill_between(x,pr,color='#5c7de8',alpha=0.75)
         plt.thetagrids(np.arange(0,360,360/nr),[])#planetresources.raw_names)
         plt.ylim(0,1)
         plt.yticks([2.0])
         
         plt.savefig('temp.png',bbox_inches='tight',dpi=300)
-        plt.clf()
+        plt.clf()'''
+        
         #im = plt.imread('temp.png')
         #width=250
         #self.imbuf = im[300-width:300+width,410-width:410+width,:]

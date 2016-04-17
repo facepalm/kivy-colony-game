@@ -5,6 +5,7 @@ from kivy.app import App
 from intropanel import IntroPanelView
 from kivy.uix.anchorlayout import AnchorLayout
 from kivy.uix.image import Image
+from kivy.clock import Clock
 
 import util
 import globalvars
@@ -32,9 +33,11 @@ class GameApp(App):
         print globalvars.universe.primary.view.id
         #globalvars.universe.primary.view.update(clear=True)
         
-                
+        Clock.schedule_interval(globalvars.universe.update, 1./33.)        
         
         return root
+        
+        
 
 if __name__ == '__main__':
     GameApp().run()

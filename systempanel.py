@@ -71,15 +71,13 @@ class SystemView(ScrollView):
             #    body.orbit_image.parent.remove_widget(body.orbit_image)
             
             if not body.orbit_image.parent:
-                ph = body.orbit_image.pos_hint
-                x = ((ph['center_x']-0.5)/self.orbit_constant + 0.5)
-                y = ((ph['center_y']-0.5)/self.orbit_constant + 0.5)
+                
                 #tmpframe = FloatLayout(size=(10,10),pos=(x*self.map.size[0],y*self.map.size[1]))
                     #tmpframe.pos_hint['center_x'] = (ph['center_x']-0.5)/self.orbit_constant + 0.5
                     #tmpframe.pos_hint['center_y'] = (ph['center_y']-0.5)/self.orbit_constant + 0.5
                     #print ph['center_x'], x,y, tmpframe.pos                    
                     #tmpframe.add_widget( body.orbit_image, 'after' )
-                body.orbit_image.pos_hint = {'center_x': x, 'center_y':y}
+                #body.orbit_image.pos_hint = {'center_x': x, 'center_y':y}
                 #body.orbit_image.pos_hint = (x,y)
                 self.map.add_widget( body.orbit_image, 'after' )
                 

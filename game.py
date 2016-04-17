@@ -4,6 +4,7 @@ import planet
 from scipy.stats import wald
 import systempanel
 import random
+import globalvars
 
 class Universe(object):    
     def __init__(self):
@@ -44,4 +45,7 @@ class Universe(object):
         
         self.primary.view.update()
 
-        
+    def update(self,dt):
+        for obj in globalvars.ids.values():
+            if hasattr(obj,'update'):
+                obj.update(dt)

@@ -23,11 +23,19 @@ def generate_planet(mass,sun,orbit):
 
 class Planet(object):
     def __init__(self,mass=None,sun=None,orbit=None,name=None, logger=None):
+        self.id = util.register(self)
         self.is_sun = False
         self.mass = mass if mass else 1E8*random.random()
         self.name = name if name else util.planet_name(self)
         self.primary=sun
         self.orbit = orbit
+        
+        #calculate orbital period
+        #T = 2pi*sqrt(a^3/u)
+        mu = 6.674E-11 * self.primary.mass
+        a = self.orbit * 149597870700.
+        self.orbital_period = 2 * math.pi * pow(pow(a,3)/mu,0.5)
+        
         if logger:
             self.logger = logging.getLogger(logger.name + '.' + self.name)
         else: 
@@ -73,6 +81,7 @@ class Planet(object):
         
         self.orbiting_bodies = []
         
+        #self.orbit_pos = NumericProperty(random.random()*2*3.14159)
         self.orbit_pos = random.random()*2*3.14159
         
         
@@ -115,33 +124,21 @@ class Planet(object):
         return planetimages.load_panel(self, self.image)
         
     
-    def generate_orbital_image(self):
-        orbit_scale = 10
-        orbit_constant = 1
-        
-        orbit_dist = (float(math.log((self.orbit+1),orbit_scale))/(2.0*orbit_constant))
-                  
+    def generate_orbital_image(self):         
         self.orbit_image = planetimages.load_orbital(self, self.image,radius=self.img_radius)
+
+
+    #def update_orbit_image:
+                
         
-        self.orbit_image.pos_hint = { 'center_x':.5+ math.cos(self.orbit_pos)*orbit_dist, \
-                                      'center_y':.5+math.sin(self.orbit_pos)*orbit_dist}
-        '''Image(source=self.image,allow_stretch=True,size_hint=(None, None), \
-                            size=(round(75*self.img_radius), round(75*self.img_radius)), pos_hint={\
-                            'center_x':.5+ math.cos(self.orbit_pos)*orbit_dist, \
-                            'center_y':.5+math.sin(self.orbit_pos)*orbit_dist})'''
-        with self.orbit_image.canvas.before:
-            PushMatrix()
-            #Rotate(angle=self.orbit_pos*180/3.14159, origin = self.orbit_image.center)           
-            ph = self.orbit_image.pos_hint
-            x = ((ph['center_x']-0.5)/systempanel.orbit_constant + 0.5)
-            y = ((ph['center_y']-0.5)/systempanel.orbit_constant + 0.5)               
-            Rotate(angle=self.orbit_pos*180/3.14159-90, origin = (2000*x,2000*y)) 
-            
-        with self.orbit_image.canvas.after:
-            PopMatrix()
-                            
-        if self.color is not None: 
-            self.orbit_image.color=self.color
+    def update(self,dt):
+
+        secs = dt*globalvars.config['TIME FACTOR']
+        old_pos = self.orbit_pos        
+        self.orbit_pos += (secs/self.orbital_period)*2*3.14159
+        if self.orbit_pos > 2*math.pi: self.orbit_pos -= 2*math.pi
+        #print self.orbit_pos - old_pos
+        self.orbit_image.orbit_pos = self.orbit_pos
         
     
 class Star(object):

@@ -1,10 +1,13 @@
 
 import random
 from kivy.uix.image import Image
-from kivy.properties import ListProperty
+from kivy.properties import ListProperty, NumericProperty, ObjectProperty
+from kivy.graphics import Line, Color, Rotate, PushMatrix, PopMatrix
 
 import globalvars
 import planetview
+import systempanel
+import math
 
 #manager for planet images & icons
 planet_dict = { 'Brown-Dwarf': ['browndwarf'],
@@ -59,7 +62,7 @@ def load_primary(planet, imagename):
     return img
     
 def load_orbital(planet, imagename, radius=1.0):
-    img = PlanetImage(source=imagename,allow_stretch=True,size_hint=(None, None),planet=planet)   
+    img = OrbitImage(source=imagename,allow_stretch=True,size_hint=(None, None),planet=planet)   
     sz = img.texture.size
     minlen= min(sz[0],sz[1])
     size = (round(100.0*radius*sz[0]/minlen),round(100.0*radius*sz[1]/minlen))        
@@ -84,11 +87,11 @@ def load_panel(planet, imagename):
     return img     
     
 class PlanetImage(Image):
+    pressed = ListProperty([0, 0])
+    
     def __init__(self,**kwargs):
         super(PlanetImage, self).__init__(**kwargs)
-        self.planet = kwargs['planet']
-    
-    pressed = ListProperty([0, 0])
+        self.planet = kwargs['planet']     
         
     def on_touch_down(self, touch):
         touch.push()
@@ -108,6 +111,78 @@ class PlanetImage(Image):
         print globalvars.root
         p = planetview.PlanetPanel(planet=self.planet)
         globalvars.root.add_widget(p)
+
+class OrbitImage(PlanetImage):
+    pressed     = ListProperty([0, 0])
+    orbit_pos   = ObjectProperty(0.)
+    orbit       = ObjectProperty(0.)
+
+    def __init__(self,**kwargs):
+        super(OrbitImage, self).__init__(**kwargs)
+        self.rotation=None
+        self.orbit = self.planet.orbit
+        self.orbit_pos = self.planet.orbit_pos
         
+        
+        if self.planet.color is not None: 
+            self.color=self.planet.color  
+        
+        
+        
+        self.place_image()
+        self.orbit_pos += 0.01
+        self.place_image()
+        
+        
+        
+        '''with self.canvas.before:
+            PushMatrix()
+                   
+            ph = self.pos_hint
+            x = ((ph['center_x']-0.5)/systempanel.orbit_constant + 0.5)
+            y = ((ph['center_y']-0.5)/systempanel.orbit_constant + 0.5)               
+            Rotate(angle=self.orbit_pos*180/3.14159-90, origin = (2000*x,2000*y)) 
+            
+        with self.canvas.after:
+            PopMatrix()'''
+
+    def place_image(self):        
+        orbit_scale = 10
+        orbit_constant = 1
+        
+
+        
+        orbit_dist = (float(math.log((self.orbit+1),orbit_scale))/(2.0*orbit_constant))        
+        
+        self.pos_hint = { 'center_x':.5+ math.cos(self.orbit_pos)*orbit_dist/systempanel.orbit_constant, \
+                          'center_y':.5+ math.sin(self.orbit_pos)*orbit_dist/systempanel.orbit_constant}
+                          
+        if self.rotation:
+            self.rotation.angle = self.orbit_pos*180/3.14159-90
+            self.rotation.origin = (2000*self.pos_hint['center_x'],2000*self.pos_hint['center_y'])
+        else:
+            with self.canvas.before:
+                PushMatrix()
+                       
+                ph = self.pos_hint
+                x = ph['center_x']
+                y = ph['center_y']
+                   
+                self.rotation = Rotate(angle=self.orbit_pos*180/3.14159-90, origin = (2000*x,2000*y)) 
+                
+            with self.canvas.after:
+                PopMatrix()                          
+                          
+        #print self.orbit, self.orbit_pos
+        
+        
+                            
+    def on_orbit(self, instance, value):
+        #print(self,'My property a changed to', value)
+        #self.place_image()
+        pass              
     
+    def on_orbit_pos(self, instance, value):
+        
+        self.place_image()
         

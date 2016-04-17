@@ -3,7 +3,7 @@ import json
 ids=dict()
 
 config = {
-    'TIME FACTOR' : 24,
+    'TIME FACTOR' : 876000,
     'ZOOM' : 15,
     'GRAPHICS' : 'pyglet',
     'AUTOLOAD': True,
@@ -24,6 +24,7 @@ def load_config():
     config = json.load( outfile )
     outfile.close()
     
+save_config()    
 load_config()
 
 scenario = None
