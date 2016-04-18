@@ -7,7 +7,7 @@ import numpy as np
 # metals silicates hydrates minerals alkalines organics corrosives conductives radioactives nobles
 # 777777  AAAAAA    
 raw_dist = np.array([ 1.0, 0.1, 0.001, 1.0, 0.01, 0.01, 1.0, 0.1, 0.001])
-raw_names = ['metals', 'rare/alkalis', 'radioactives', 'silicates', 'conductives', 'corrosives', 'hydrates', 'organics', 'nobles']
+raw_names = ['metallics', 'rare/alkalis', 'radioactives', 'silicates', 'conductives', 'corrosives', 'hydrates', 'organics', 'nobles']
 raw_num = 9
 
 class PlanetResources(object):
