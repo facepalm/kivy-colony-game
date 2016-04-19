@@ -6,6 +6,8 @@ import systempanel
 import random
 import globalvars
 
+import ark
+
 class Universe(object):    
     def __init__(self):
         self.generate_system()
@@ -40,9 +42,14 @@ class Universe(object):
             
         #habitable zone world        
         newp = planet.generate_planet(random.random()*9E24 + 1E24,self.primary,self.primary.random_habitable_orbit())
-        self.planets.extend(newp)    
+        self.planets.extend(newp)  
         
+        #instantiate Ark
+        theArk = ark.Ark()
+        theArk.build(free=True)  
+        newp[0].sites[-1].stuff.append(theArk)
         
+        #print theArk.composition
         self.primary.view.update()
 
     def update(self,dt):

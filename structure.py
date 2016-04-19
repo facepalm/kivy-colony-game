@@ -1,21 +1,28 @@
 
 import util
+import globalvars
 
 class Structure(object):
-    recipes = [{'Unobtanium':1}] #Contains a number of possible recipes for the creation of this structure
+    recipes = [{'unobtanium':1}] #Contains a number of possible recipes for the creation of this structure
 
-    process = { 'input': {}, 
+    process = [{ 'input': {}, 
                 'output': {},
-                'period': util.seconds(1,'day') }
+                'period': util.seconds(1,'day') }]
 
     def __init__(self,**kwargs):
         self.built=False
         self.recipe = None
-        self.components = None
+        self.composition = None
+        
+        self.site=None
+        
+        util.register(self)
         
         
     def build(self, resources=None, free=False):
-        if free or self.built:
+        if self.built: return resources
+        if free:
+            self.composition = self.recipes[0]
             self.built = True
             return resources
         
@@ -27,8 +34,15 @@ class Structure(object):
         if not self.recipe:
             return resources
             
-        test, self.components = resources.sub(self.recipes[self.recipe])
+        test, self.composition = resources.sub(self.recipes[self.recipe])
         
         if test: self.built = True
         
         return resources
+        
+    def update(self,dt):
+        secs = dt*globalvars.config['TIME FACTOR']
+        for p in self.process:        
+            timeslice = secs/p['period']  
+        
+        #run self.process for timeslice seconds     
