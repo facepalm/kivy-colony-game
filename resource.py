@@ -40,15 +40,22 @@ def resource_dict():
     res['metal'] = 0
     res['water'] = 0
     res['silicon'] = 0
-    res['brick'] = 0
+    res['brick'] = 0   
+    res['conductor'] = 0     
     
     #intermediate materials, retro technology
+    res['processed rares'] = 0
     res['parts'] = 0
     res['electronics'] = 0
+    res['chemical rockets'] = 0
+    res['solar panels'] = 0
+    res['electromagnets'] = 0
     
     #present-day materials
     res['microprocessors'] = 0
-    res['superconductors'] = 0
+    res['superconductors'] = 0    
+    res['ion drives'] = 0
+    
     
     #ultramaterials
     res['computronium'] = 0
