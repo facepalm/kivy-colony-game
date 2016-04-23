@@ -67,6 +67,8 @@ def load_orbital(planet, imagename, radius=1.0):
     minlen= min(sz[0],sz[1])
     size = (round(100.0*radius*sz[0]/minlen),round(100.0*radius*sz[1]/minlen))        
     img.size=size    
+    
+            
     #print imagename,img.size,img.texture.size
     return img    
     
@@ -120,6 +122,7 @@ class OrbitImage(PlanetImage):
     def __init__(self,**kwargs):
         super(OrbitImage, self).__init__(**kwargs)
         self.rotation=None
+        self.occupied_indicator = None
         self.orbit = self.planet.orbit
         self.orbit_pos = self.planet.orbit_pos
         
@@ -160,6 +163,8 @@ class OrbitImage(PlanetImage):
         if self.rotation:
             self.rotation.angle = self.orbit_pos*180/3.14159-90
             self.rotation.origin = (2000*self.pos_hint['center_x'],2000*self.pos_hint['center_y'])
+            self.occupied_indicator[0].rgba = (0.5, 0.5, 0.5, 0.5) if self.planet.occupied else (0.5, 0.5, 0.5, 0)
+            self.occupied_indicator[1].circle=( 2000*self.pos_hint['center_x'],2000*self.pos_hint['center_y'], 9)
         else:
             with self.canvas.before:
                 PushMatrix()
@@ -167,10 +172,13 @@ class OrbitImage(PlanetImage):
                 ph = self.pos_hint
                 x = ph['center_x']
                 y = ph['center_y']
-                   
+                 
                 self.rotation = Rotate(angle=self.orbit_pos*180/3.14159-90, origin = (2000*x,2000*y)) 
                 
+                
             with self.canvas.after:
+                
+                self.occupied_indicator = [Color( 0.5, 0.5, 0.5, 1 ), Line(circle=( 2000*x,2000*y, 9), dash_length=10, dash_offset = 20, width=3)]
                 PopMatrix()                          
                           
         #print self.orbit, self.orbit_pos

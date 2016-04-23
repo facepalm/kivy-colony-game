@@ -80,9 +80,12 @@ class SystemView(ScrollView):
                 #body.orbit_image.pos_hint = {'center_x': x, 'center_y':y}
                 #body.orbit_image.pos_hint = (x,y)
                 self.map.add_widget( body.orbit_image, 'after' )
-                
-            
-                with self.map.canvas.before:                                        
+                                                            
+                with self.map.canvas.before: 
+                    '''if body.occupied:
+                        Color( 0.5, 0.5, 0.75 )
+                        Line(circle=( self.map.size[0]/2, self.map.size[1]/2, 0.5*self.map.size[0]*float(math.log((body.orbit+1),10)/self.orbit_constant)), dash_length=20, dash_offset = 10)'''
+                                                       
                     #self.map.canvas.opacity = 0.5
                     Color( 0.5, 0.5, 0.25 )
                     #print self.to_window(self.center_x, self.center_y)

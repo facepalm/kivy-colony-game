@@ -77,6 +77,7 @@ class Planet(object):
     
         self.explored = 0.3
         self.resources = planetresources.PlanetResources(self)
+        self.occupied = False
         self.initialize_sites()
         
         self.orbiting_bodies = []
@@ -139,6 +140,10 @@ class Planet(object):
         if self.orbit_pos > 2*math.pi: self.orbit_pos -= 2*math.pi
         #print self.orbit_pos - old_pos
         self.orbit_image.orbit_pos = self.orbit_pos
+        
+        self.occupied=False
+        for s in self.sites:
+            if s.stuff: self.occupied=True
         
     
 class Star(object):

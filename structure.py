@@ -14,6 +14,8 @@ class Structure(object):
         self.recipe = None
         self.composition = None
         
+        self.occupation_level = 1
+        
         self.site=None
         
         util.register(self)
@@ -44,5 +46,8 @@ class Structure(object):
         secs = dt*globalvars.config['TIME FACTOR']
         for p in self.process:        
             timeslice = secs/p['period']  
+            
+        if self.site and self.site.planet and self.site.planet.occupied < self.occupation_level:
+            self.site.planet.occupied = self.occupation_level
         
         #run self.process for timeslice seconds     
