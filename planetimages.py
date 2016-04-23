@@ -164,7 +164,8 @@ class OrbitImage(PlanetImage):
             self.rotation.angle = self.orbit_pos*180/3.14159-90
             self.rotation.origin = (2000*self.pos_hint['center_x'],2000*self.pos_hint['center_y'])
             self.occupied_indicator[0].rgba = (0.5, 0.5, 0.5, 0.5) if self.planet.occupied else (0.5, 0.5, 0.5, 0)
-            self.occupied_indicator[1].circle=( 2000*self.pos_hint['center_x'],2000*self.pos_hint['center_y'], 9)
+            self.occupied_indicator[1].circle=( 2000*self.pos_hint['center_x'],2000*self.pos_hint['center_y'], 20)
+            self.occupied_indicator[1].width= self.planet.occupied + 1
         else:
             with self.canvas.before:
                 PushMatrix()
@@ -178,7 +179,7 @@ class OrbitImage(PlanetImage):
                 
             with self.canvas.after:
                 
-                self.occupied_indicator = [Color( 0.5, 0.5, 0.5, 1 ), Line(circle=( 2000*x,2000*y, 9), dash_length=10, dash_offset = 20, width=3)]
+                self.occupied_indicator = [Color( 0.5, 0.5, 0.5, 0.5 ), Line(circle=( 2000*x,2000*y, 20), width=3)]
                 PopMatrix()                          
                           
         #print self.orbit, self.orbit_pos

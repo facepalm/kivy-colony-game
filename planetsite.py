@@ -20,8 +20,14 @@ class Site(object):
         self.explored = self.planet.explored
         
         self.stuff=[]
+        self.occupied = 0
         
         #print self.planet.name, self.location, self.effective_resources, self.mine
         
     def small_view(self):
-        return siteview.SiteEntrySmall(site=self)        
+        return siteview.SiteEntrySmall(site=self)       
+        
+    def update_occupied(self):
+        self.occupied = 0
+        for s in self.stuff:
+            self.occupied = max(self.occupied, s.occupation_level)

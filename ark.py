@@ -17,3 +17,4 @@ class Ark(Structure):
 
     def __init__(self, **kwargs):
         super(Ark, self).__init__(**kwargs)
+        self.occupation_level = 3
