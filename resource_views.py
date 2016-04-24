@@ -22,26 +22,26 @@ Builder.load_string("""
         name: 'Fe'
         number: float(self.parent.planetresources.raw[0])
     ResourceEntry:
-        name: 'Si'
-        number: float(self.parent.planetresources.raw[3])
-    ResourceEntry:
-        name: 'H2O'
-        number: float(self.parent.planetresources.raw[6] )
-    ResourceEntry:
         name: 'Li'
         number: float(self.parent.planetresources.raw[1])
-    ResourceEntry:
-        name: 'Au'
-        number: float(self.parent.planetresources.raw[4])
-    ResourceEntry:
-        name: 'C'
-        number: float(self.parent.planetresources.raw[7])
     ResourceEntry:
         name: 'U'
         number: float(self.parent.planetresources.raw[2])
     ResourceEntry:
+        name: 'Si'
+        number: float(self.parent.planetresources.raw[3])
+    ResourceEntry:
+        name: 'Au'
+        number: float(self.parent.planetresources.raw[4])
+    ResourceEntry:
         name: 'Fl'
         number: float(self.parent.planetresources.raw[5])
+    ResourceEntry:
+        name: 'H2O'
+        number: float(self.parent.planetresources.raw[6] )
+    ResourceEntry:
+        name: 'C'
+        number: float(self.parent.planetresources.raw[7])
     ResourceEntry:
         name: 'Xe'
         number: float(self.parent.planetresources.raw[8])

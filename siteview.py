@@ -41,30 +41,34 @@ entry_small_kv = '''
         Color:
             rgb: (0.05, 0.05, 0.15)
         Rectangle:
-            size: self.size[0], self.size[1]*0.9
-            pos: self.pos     
+            size: self.size[0] - 10, self.size[1]-10
+            pos: self.pos[0]+5, self.pos[1]+5
             
     Label:
         text: entry.site.location    
     
-    MineLoc:
-        opacity: 0.1 if entry.site.mine[0] > entry.site.explored else 1.0
-    MineLoc:
-        opacity: 0.1 if entry.site.mine[1] > entry.site.explored else 1.0
-    MineLoc:
-        opacity: 0.1 if entry.site.mine[2] > entry.site.explored else 1.0
-    MineLoc:
-        opacity: 0.1 if entry.site.mine[3] > entry.site.explored else 1.0        
-    MineLoc:
-        opacity: 0.1 if entry.site.mine[4] > entry.site.explored else 1.0                    
-    MineLoc:
-        opacity: 0.1 if entry.site.mine[5] > entry.site.explored else 1.0        
-    MineLoc:
-        opacity: 0.1 if entry.site.mine[6] > entry.site.explored else 1.0                        
-    MineLoc:
-        opacity: 0.1 if entry.site.mine[7] > entry.site.explored else 1.0        
-    MineLoc:
-        opacity: 0.1 if entry.site.mine[8] > entry.site.explored else 1.0            
+    GridLayout:
+        rows: 3
+        cols: 3
+        padding: 15
+        MineLoc:
+            opacity: 0.1 if entry.site.mine[0] > entry.site.explored else 1.0
+        MineLoc:
+            opacity: 0.1 if entry.site.mine[1] > entry.site.explored else 1.0
+        MineLoc:
+            opacity: 0.1 if entry.site.mine[2] > entry.site.explored else 1.0
+        MineLoc:
+            opacity: 0.1 if entry.site.mine[3] > entry.site.explored else 1.0        
+        MineLoc:
+            opacity: 0.1 if entry.site.mine[4] > entry.site.explored else 1.0                    
+        MineLoc:
+            opacity: 0.1 if entry.site.mine[5] > entry.site.explored else 1.0        
+        MineLoc:
+            opacity: 0.1 if entry.site.mine[6] > entry.site.explored else 1.0                        
+        MineLoc:
+            opacity: 0.1 if entry.site.mine[7] > entry.site.explored else 1.0        
+        MineLoc:
+            opacity: 0.1 if entry.site.mine[8] > entry.site.explored else 1.0            
     Label:
         text: "End"       
 '''
