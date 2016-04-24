@@ -9,6 +9,8 @@ import planetview
 import systempanel
 import math
 
+import util
+
 #manager for planet images & icons
 planet_dict = { 'Brown-Dwarf': ['browndwarf'],
                 'Gas' : ['cloud0','gas5','gas1','gas2','gas4','gas7','cloud5','cloud7'],
@@ -111,8 +113,12 @@ class PlanetImage(Image):
         print ('Planet ',self.planet.name,', pressed at {pos}'.format(pos=pos))
         print self.planet.type, self.planet.resources.raw, self.planet.subtype if hasattr(self.planet,'subtype') else ''
         print globalvars.root
-        p = planetview.PlanetPanel(planet=self.planet)
-        globalvars.root.add_widget(p)
+        
+        pname = util.short_id(self.planet.id)+'-planet'
+        if not globalvars.root.screen_manager.has_screen(pname):
+            p = planetview.PlanetPanel(planet=self.planet)
+            globalvars.root.screen_manager.add_widget( p )
+        globalvars.root.onNextScreen(pname)
 
 class OrbitImage(PlanetImage):
     pressed     = ListProperty([0, 0])

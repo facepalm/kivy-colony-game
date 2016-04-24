@@ -61,8 +61,7 @@ It will have to do.[/color]
 
     def __init__(self, **kwargs):
         super(IntroPanelView, self).__init__(**kwargs)
-        self.name='introscreen'
-        Window.bind(on_keyboard=self.onBackBtn) 
+        self.name='introscreen' 
         
         # create a default grid layout with custom width/height
         layout = GridLayout(cols=1, padding=10, spacing=10,
@@ -92,14 +91,6 @@ It will have to do.[/color]
         self.add_widget(layout)
         
     def close(self, instance):
-        self.parent.remove_widget(self)
-        
-    def onBackBtn(self, window, key, *args):
-        """ To be called whenever user presses Back/Esc Key """
-        # If user presses Back/Esc Key
-        if key == 27 or key == 1001:
-            if self in globalvars.root.children:
-                globalvars.root.remove_widget(self)
-                return True
-        return False    
+        globalvars.root.onBackBtn()
+  
 

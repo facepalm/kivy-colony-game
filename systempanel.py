@@ -38,9 +38,7 @@ class SystemView(ScrollView):
         self.map.add_widget(self.primary.primary_image())      
         self.scroll_x = 0.5
         self.scroll_y = 0.5
-
-         
-        Window.bind(on_keyboard=self.onBackBtn)        
+      
 
     def on_touch_down(self, touch):
         super(SystemView, self).on_touch_down(touch)
@@ -80,14 +78,5 @@ class SystemView(ScrollView):
                     Line(circle=( self.map.size[0]/2, self.map.size[1]/2, 0.5*self.map.size[0]*float(math.log((body.orbit+1),10)/self.orbit_constant)), dash_length=20, dash_offset = 10)
 
 
-
-    def onBackBtn(self, window, key, *args):
-        """ To be called whenever user presses Back/Esc Key """
-        # If user presses Back/Esc Key
-        if key == 27 or key == 1001:
-            if self in globalvars.root.children:
-                globalvars.root.remove_widget(self)
-                return True
-        return False
             
         

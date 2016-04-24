@@ -11,6 +11,7 @@ from kivy.graphics import Line, Color, Rectangle
 from kivy.graphics.texture import Texture
 from kivy.uix.scrollview import ScrollView
 from kivy.uix.widget import Widget
+from kivy.uix.screenmanager import Screen
 
 import math
 import numpy as np
@@ -30,11 +31,12 @@ import util
 
 kv = '''
 <PlanetPanel>:
-    size_hint: 0.8, 0.8
+    size_hint: 0.9, 0.9
     #size: app.root_window.width*0.8,app.root_window.height*0.8
     pos_hint: {'center_x': .5, 'center_y': .5}
     
     id: panel
+
     StackLayout:
         id: panel2
         size_hint: 1, 1
@@ -108,10 +110,11 @@ kv = '''
 
 Builder.load_string(kv)
 
-class PlanetPanel(StackLayout):
+class PlanetPanel(Screen):
     def __init__(self, **kwargs):
         self.planet = kwargs['planet']
         
+        self.name = util.short_id(self.planet.id)+'-planet'
         
         nr = 1.0*planetresources.raw_num
         pr = self.planet.resources.raw.squeeze()
@@ -149,12 +152,12 @@ class PlanetPanel(StackLayout):
             self.ids['panel3'].add_widget(b)
                       
             
-        Window.bind(on_keyboard=self.onBackBtn)        
+        #Window.bind(on_keyboard=self.onBackBtn)        
 
         
         
         
-    def on_touch_down(self, touch):
+    '''def on_touch_down(self, touch):
         touch.push()
         touch.apply_transform_2d(self.to_widget)
         touched = self.collide_point(*touch.pos)
@@ -173,5 +176,5 @@ class PlanetPanel(StackLayout):
             if self in globalvars.root.children:
                 globalvars.root.remove_widget(self)
                 return True
-        return False                  
+        return False       '''           
                   
