@@ -14,8 +14,18 @@ import globalvars
 
 from kivy.core.window import Window
 from kivy.graphics.context_instructions import Scale
+from kivy.uix.screenmanager import Screen
+from kivy.lang import Builder
 
 orbit_constant = 3.0
+
+
+class SystemScreen(Screen):
+    def __init__(self, **kwargs):
+        super(SystemScreen, self).__init__(**kwargs)
+        self.system_view = SystemView(**kwargs)
+        self.add_widget( self.system_view )
+        self.name = kwargs['name']
 
 class SystemView(ScrollView):
     def __init__(self, **kwargs):

@@ -9,6 +9,7 @@ from kivy.uix.label import Label
 from kivy.uix.widget import Widget
 from kivy.graphics import Color, Rectangle
 from kivy.core.window import Window
+from kivy.uix.screenmanager import ScreenManager, Screen
 
 import globalvars
 
@@ -28,7 +29,7 @@ class ScrollView(ScrollView):
         self.bind(pos=update_rect, size=update_rect)
 
 
-class IntroPanelView(AnchorLayout):
+class IntroPanelView(Screen):
     introtext = '''[color=aaaaaa]
 [size=10]-~- No autosave found.  Initializing new game -~-[/size][color=ffffff]     
    
@@ -60,6 +61,7 @@ It will have to do.[/color]
 
     def __init__(self, **kwargs):
         super(IntroPanelView, self).__init__(**kwargs)
+        self.name='introscreen'
         Window.bind(on_keyboard=self.onBackBtn) 
         
         # create a default grid layout with custom width/height

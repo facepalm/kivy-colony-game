@@ -158,6 +158,7 @@ class Planet(object):
 class Star(object):
     def __init__(self, solar_masses, name=None, logger=None):
         self.is_sun = True
+        self.id = util.register(self)
         self.solar_masses = solar_masses
         self.mass = self.solar_masses*2E30
         self.name = name if name else util.star_name(self)
@@ -227,8 +228,8 @@ class Star(object):
         
         self.orbiting_bodies = []
         
-        self.view = systempanel.SystemView(primary=self)
-        globalvars.root.add_widget(self.view)
+        self.view = systempanel.SystemScreen(name=util.short_id(self.id)+"-system",primary=self)
+        globalvars.root.screen_manager.add_widget(self.view)
 
     def primary_image(self):
         frac = 0.25        

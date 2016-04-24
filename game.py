@@ -50,7 +50,7 @@ class Universe(object):
         newp[0].sites[-1].stuff.append(theArk)
         
         #print theArk.composition
-        self.primary.view.update()
+        self.primary.view.system_view.update()
 
     def update(self,dt):
         for obj in globalvars.ids.values():
