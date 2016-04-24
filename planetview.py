@@ -28,6 +28,7 @@ import matplotlib.pyplot as plt
 import planetresources
 import siteview
 import util
+from resource_views import RawResourceSquare
 
 kv = '''
 <PlanetPanel>:
@@ -87,8 +88,7 @@ kv = '''
             #    size_hint: 0.90, 0.90
             #    pos_hint: {'center_x': .5, 'center_y': .5}
             #    text: "View"                                
-        Image:
-            source: 'temp.png'
+        BoxLayout:
             size_hint: 0.25, 0.25
             id: resimg
             #pos_hint: {'center_x': .5, 'center_y': .5}
@@ -144,7 +144,8 @@ class PlanetPanel(Screen):
         
         super(PlanetPanel, self).__init__(**kwargs)
         
-        self.ids['resimg'].reload()
+        pr = RawResourceSquare(planetresources = self.planet.resources)
+        self.ids['resimg'].add_widget(pr)
         
         for s in self.planet.sites:    
             b = BoxLayout(size_hint_y =None,height=100)
