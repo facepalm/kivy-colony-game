@@ -165,7 +165,7 @@ class OrbitImage(PlanetImage):
             self.rotation.origin = (2000*self.pos_hint['center_x'],2000*self.pos_hint['center_y'])
             self.occupied_indicator[0].rgba = (0.5, 0.5, 0.5, 0.5) if self.planet.occupied else (0.5, 0.5, 0.5, 0)
             self.occupied_indicator[1].circle=( 2000*self.pos_hint['center_x'],2000*self.pos_hint['center_y'], 20)
-            self.occupied_indicator[1].width= self.planet.occupied + 1
+            self.occupied_indicator[1].width= max(1,self.planet.occupied)
         else:
             with self.canvas.before:
                 PushMatrix()

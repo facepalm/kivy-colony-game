@@ -25,16 +25,22 @@ class Planet(object):
     def __init__(self,mass=None,sun=None,orbit=None,name=None, logger=None):
         self.id = util.register(self)
         self.is_sun = False
-        self.mass = mass if mass else 1E8*random.random()
+        self.mass = mass if mass else 1E24*random.random()
         self.name = name if name else util.planet_name(self)
         self.primary=sun
         self.orbit = orbit
         
+        #estimate radius, based off Earth
+        self.radius = 6400000 *pow(self.mass/6E24,0.3)
+                
         #calculate orbital period
         #T = 2pi*sqrt(a^3/u)
         mu = 6.674E-11 * self.primary.mass
+        mmu = 6.674E-11 * self.mass
         a = self.orbit * 149597870700.
         self.orbital_period = 2 * math.pi * pow(pow(a,3)/mu,0.5)
+        
+        self.launch_dv = pow( mmu/ (self.radius + 500000) , 0.5 )
         
         if logger:
             self.logger = logging.getLogger(logger.name + '.' + self.name)
