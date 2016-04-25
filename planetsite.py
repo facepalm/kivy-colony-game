@@ -10,6 +10,8 @@ class Site(object):
         self.planet = planet
         self.location = location
         
+        self.fancy_name = 'Orbit' if 'Orbit' in self.location else 'Ground Site'
+        
         self.resources = np.zeros(planetresources.raw_num,dtype='float32').squeeze() if 'Orbit' in self.location else np.multiply(2*np.random.random(planetresources.raw_num),self.planet.resources.raw)
         self.effective_resources = np.multiply(self.resources, self.planet.resources.raw_dist)
         if self.effective_resources.sum() > 0: self.effective_resources /= sum(self.effective_resources)

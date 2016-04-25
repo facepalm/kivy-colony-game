@@ -1,6 +1,7 @@
 
 import util
 import globalvars
+import shipimage
 
 class Structure(object):
     recipes = [{'unobtanium':1}] #Contains a number of possible recipes for the creation of this structure
@@ -18,7 +19,12 @@ class Structure(object):
         
         self.site=None
         
+        self.image = None
+        self.imagename = kwargs['imagename'] if 'imagename' in kwargs else 'Default'
+        
         util.register(self)
+        
+        self.generate_image()
         
         
     def build(self, resources=None, free=False):
@@ -51,3 +57,12 @@ class Structure(object):
             self.site.planet.occupied = self.occupation_level
         
         #run self.process for timeslice seconds     
+        
+    def generate_image(self,clear=False):
+        if self.image is None:
+            self.image = shipimage.ShipImage(ship=self, source = shipimage.shipimages[self.imagename])
+        #handle deleting and regenerating image here
+        
+        
+        
+        

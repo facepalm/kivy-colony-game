@@ -45,12 +45,15 @@ entry_small_kv = '''
             pos: self.pos[0]+5, self.pos[1]+5
             
     Label:
-        text: entry.site.location    
+        size_hint: 0.25,1
+        text: entry.site.fancy_name  
     
     GridLayout:
+        size_hint: 0.15,0.7
+        pos_hint: {'center_x': .5, 'center_y': .5}
         rows: 3
         cols: 3
-        padding: 15
+        #padding: 15, 15
         MineLoc:
             opacity: 0.1 if entry.site.mine[0] > entry.site.explored else 1.0
         MineLoc:
