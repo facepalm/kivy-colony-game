@@ -84,7 +84,7 @@ class SiteEntrySmall(BoxLayout):
         
     def on_touch_down(self, touch):
         touch.push()
-        touch.apply_transform_2d(self.to_widget)
+        touch.apply_transform_2d(self.to_local)
         touched = self.collide_point(*touch.pos)
         touch.pop()
         if touched:

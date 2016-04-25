@@ -7,6 +7,7 @@ Builder.load_string("""
 <ResourceEntry>:    
     number: 0.0
     name: ' ' 
+    padding: 3
     Label: 
         text: self.parent.name
     ProgressBar:
