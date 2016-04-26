@@ -81,7 +81,7 @@ class Planet(object):
             self.img_radius = 0.10
     
     
-        self.explored = 0.3
+        self.explored = 0.0
         self.resources = planetresources.PlanetResources(self)
         self.occupied = 0
         self.initialize_sites()
@@ -144,6 +144,10 @@ class Planet(object):
         for s in self.sites:
             s.update_occupied()
             self.occupied = max(self.occupied,s.occupied)
+
+    def add_exploration(self,amt=0.0001,limit=0.1):
+        if self.explored < limit: self.explored += amt
+
         
     
 class Star(object):
@@ -216,7 +220,7 @@ class Star(object):
         self.snow_line = 3 * pow( self.luminosity ,0.5)
         self.ice_line = 10 * pow( self.luminosity ,0.5)
         
-        
+        self.explored = 0.0
         self.orbiting_bodies = []
         
         self.view = systempanel.SystemScreen(name=util.short_id(self.id)+"-system",primary=self)
@@ -237,6 +241,9 @@ class Star(object):
         out += ', Habitable zone between %.2f' % self.habitable_start +' and %.2f' % self.habitable_end
         out += ', Snow line at %.2f' % self.snow_line
         return out
+        
+    def add_exploration(self,amt=0.0001,limit=0.1):
+        if self.explored < limit: self.explored += amt        
         
     
 if __name__ == "__main__":        

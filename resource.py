@@ -20,6 +20,9 @@ class Resource(object):
                         
     def mass(self):
         return sum( self.res.values() )
+        
+    def atrophy(self,dt):
+        self.res['electricity'] *= 0.9
                         
 
 def resource_dict():
@@ -61,6 +64,8 @@ def resource_dict():
     res['computronium'] = 0
     res['unobtanium'] = 0
     res['antimatter'] = 0
+    
+    res['electricity'] = 0
     
     return res
     

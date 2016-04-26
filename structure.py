@@ -50,17 +50,60 @@ class Structure(object):
         
     def update(self,dt):
         secs = dt*globalvars.config['TIME FACTOR']
+        
+        if self.site and self.site.planet and self.site.planet.occupied < self.occupation_level:
+            self.site.planet.occupied = self.occupation_level
+        
+        #TODO: refactor the below in some more organized fashion.  
+        #It doesn't need to be run by the base structure object
         for p in self.process:        
-            timeslice = secs/p['period']  
-            
+            timeslice = secs/p['period']              
             #run p for timeslice seconds     
+            
             #compute inputs, check inputs
-            #generate outputs
+            inputs = p['input'].copy()
+            run_process = True 
+            
+            if not self.site: continue
+            
+            for i in inputs:
+                inputs[i] *= timeslice
+                assert inputs[i] != p['input'][i], "Sanity check: processing is changing input dictionary"
+                
+                #handle special case inputs here
+                    
+            real_input = {k:v for k,v in inputs.items() if k in self.site.resources.res}
+            
+            run_process = self.site.resources.check( real_input )
+            
+            if run_process: #we doin this
+                #subtract inputs
+                self.site.resources.sub(real_input)
+                for i in inputs:
+                    #special case stuff here
+                    pass 
+                    
+                #generate outputs
+                outputs = p['output'].copy()
+                
+                for o in outputs:
+                    outputs[o] *= timeslice    
+                    #handle special case inputs here
+                    if o == 'Exploration (System)':
+                        limit = p['explore-limit'] if 'explore-limit' in p else 0.1                        
+                        globalvars.universe.add_exploration(outputs[o],limit)
+                        
+                        print self.site.planet.explored
+                    
+                real_output = {k:v for k,v in outputs.items() if k in self.site.resources.res}
+                
+                self.site.resources.add(real_output)
+                
+                
             #handle outputs
             
             
-        if self.site and self.site.planet and self.site.planet.occupied < self.occupation_level:
-            self.site.planet.occupied = self.occupation_level                
+                        
         
         
     def generate_image(self,clear=False):

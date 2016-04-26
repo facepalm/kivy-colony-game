@@ -48,6 +48,8 @@ class Universe(object):
         theArk = ark.Ark()
         theArk.build(free=True)  
         newp[0].sites[0].stuff.append(theArk)
+        theArk.site = newp[0].sites[0]
+        newp[0].sites[0].resources.add({'antimatter':1000})
         
         #print theArk.composition
         self.primary.view.system_view.update()
@@ -56,3 +58,9 @@ class Universe(object):
         for obj in globalvars.ids.values():
             if hasattr(obj,'update'):
                 obj.update(dt)
+                
+    def add_exploration(self,amt=0.0001,limit=0.1):
+        for obj in globalvars.ids.values():
+            if isinstance(obj,planet.Planet) or isinstance(obj,planet.Star):
+                obj.add_exploration(amt,limit)
+        

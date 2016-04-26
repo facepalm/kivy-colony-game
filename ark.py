@@ -4,7 +4,7 @@ import util
 
 class Ark(Structure):
 
-    recipes = [{'unobtanium':1000000, 'antimatter':1000, 'computronium':1000}] 
+    recipes = [{'unobtanium':1000000, 'computronium':1000}] 
 
     #antimatter: 9E15 J/kg ~ 1E16
     #antimatter containment: 1.21 jiggawatts * 3600 * 24 = 104544 E9 J ~= 1E14 J
@@ -21,6 +21,7 @@ class Ark(Structure):
                 {   'name' : 'Remote Exploration',
                     'input' : {'electricity':1E2},
                     'output' : {'Exploration (System)' : 0.01 },
+                    'explore-limit' : 0.2,
                     'period': util.seconds(1,'year') }
                ]
 
@@ -28,4 +29,4 @@ class Ark(Structure):
         if not 'imagename' in kwargs:
             kwargs['imagename'] = 'Ark'
         super(Ark, self).__init__(**kwargs)
-        self.occupation_level = 3
+        self.occupation_level = 3        
