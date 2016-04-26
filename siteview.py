@@ -72,8 +72,9 @@ entry_small_kv = '''
             opacity: 0.1 if entry.site.mine[7] > entry.site.explored else 1.0        
         MineLoc:
             opacity: 0.1 if entry.site.mine[8] > entry.site.explored else 1.0            
-    Label:
-        text: "End"       
+    StackLayout:
+        id: ships
+        orientation: 'tb-lr'
 '''
 
 
@@ -83,6 +84,9 @@ class SiteEntrySmall(BoxLayout):
     def __init__(self, **kwargs):
         self.site = kwargs['site']
         super(SiteEntrySmall, self).__init__(**kwargs)                
+        
+        for s in self.site.stuff:
+            self.ids['ships'].add_widget(s.image)
         
         
     def on_touch_down(self, touch):

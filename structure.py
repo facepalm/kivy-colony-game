@@ -53,15 +53,21 @@ class Structure(object):
         for p in self.process:        
             timeslice = secs/p['period']  
             
+            #run p for timeslice seconds     
+            #compute inputs, check inputs
+            #generate outputs
+            #handle outputs
+            
+            
         if self.site and self.site.planet and self.site.planet.occupied < self.occupation_level:
-            self.site.planet.occupied = self.occupation_level
+            self.site.planet.occupied = self.occupation_level                
         
-        #run self.process for timeslice seconds     
         
     def generate_image(self,clear=False):
+        if clear: pass #handle deleting image here
         if self.image is None:
             self.image = shipimage.ShipImage(ship=self, source = shipimage.shipimages[self.imagename])
-        #handle deleting and regenerating image here
+        
         
         
         

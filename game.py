@@ -47,7 +47,7 @@ class Universe(object):
         #instantiate Ark
         theArk = ark.Ark()
         theArk.build(free=True)  
-        newp[0].sites[-1].stuff.append(theArk)
+        newp[0].sites[0].stuff.append(theArk)
         
         #print theArk.composition
         self.primary.view.system_view.update()

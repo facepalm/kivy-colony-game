@@ -88,7 +88,6 @@ class Planet(object):
         
         self.orbiting_bodies = []
         
-        #self.orbit_pos = NumericProperty(random.random()*2*3.14159)
         self.orbit_pos = random.random()*2*3.14159
         
         
@@ -97,7 +96,6 @@ class Planet(object):
 
         #self.generate_primary_image()        
         self.generate_orbital_image()
-        #print self.orbit_image.pos_hint
         
         
         
@@ -107,23 +105,18 @@ class Planet(object):
     def initialize_sites(self):
         self.sites=[]
         self.num_sites = 6 if self.type == 'Planet' else 2 if self.type == 'Dwarf planet' else 1 if self.type == 'Planetoid' else 0
-        #print dir(site)
-        for s in range(self.num_sites):
-            s1 = planetsite.Site(self,'Site'+str(s))
-            self.sites.append(s1)
         self.num_orbits = 1
         for s in range(self.num_orbits):
             s1 = planetsite.Site(self,'Orbit'+str(s))
             self.sites.append(s1)
+
+        for s in range(self.num_sites):
+            s1 = planetsite.Site(self,'Site'+str(s))
+            self.sites.append(s1)
         
-        #print self.sites, self.orbits
-    
     def primary_image(self):
-                
         return planetimages.load_primary(self, self.image)
-        
-        #Image(source=self.img_name,allow_stretch=True,size_hint=(None, None),size=(round(75*self.img_radius), round(75*self.img_radius)),pos_hint={'center_x':.5, 'center_y':.5})      
-    
+
         if self.color is not None: 
             self.image.color=self.color
    
@@ -135,8 +128,6 @@ class Planet(object):
         self.orbit_image = planetimages.load_orbital(self, self.image,radius=self.img_radius)
 
 
-    #def update_orbit_image:
-                
         
     def update(self,dt):
 
