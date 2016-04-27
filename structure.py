@@ -92,8 +92,6 @@ class Structure(object):
                     if o == 'Exploration (System)':
                         limit = p['explore-limit'] if 'explore-limit' in p else 0.1                        
                         globalvars.universe.add_exploration(outputs[o],limit)
-                        
-                        print self.site.planet.explored
                     
                 real_output = {k:v for k,v in outputs.items() if k in self.site.resources.res}
                 

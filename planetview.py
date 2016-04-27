@@ -82,6 +82,7 @@ kv = '''
             Label:
                 text: "{0:.0f} % explored".format(100*panel.planet.explored)
                 font_size: 16
+                id: exploration_string
         #FloatLayout:
         #    size_hint: 0.25, 0.25
             #Button:
@@ -156,7 +157,8 @@ class PlanetPanel(Screen):
         #Window.bind(on_keyboard=self.onBackBtn)        
 
         
-        
+    def on_pre_enter(self):
+        self.ids['exploration_string'].text = "{0:.0f} % explored".format(100*self.planet.explored)
         
     '''def on_touch_down(self, touch):
         touch.push()
