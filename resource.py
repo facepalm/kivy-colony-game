@@ -1,29 +1,61 @@
 
-need_dict = { 'structure':  {'metal':1.0, 'brick':4.0},
-              'computation': {'electronics':1E6,'microprocessors':1.0,'computronium':1E-6} }
+
 
 class Resource(object):
     def __init__(self):
-        self.res = resource_dict()
+        self.res={}
+        self.virtual_limit = 10
+        self.mass = 0.0
 
-    def add(self,res):
-        self.res = add_res(self.res, res)
-        return True
-                        
-    def sub(self,res):
-        fills = self.check(res)
-        (self.res,newres) = sub_res(self.res, res)
-        return fills, newres         
+    def add(self,name,amt=0.0,virtual=False,affect_mass=True):
+        if amt <= 0: return 0
+        if not name in self.res:
+            self.res[name]=0.0
+        if virtual:
+            amtadded = min(amt,self.res[name]*self.virtual_limit)
+            self.res[name] += amtadded
+            return amtadded/amt
+        else:
+            self.res[name] += amt
+            if affect_mass: self.mass += amt
+            return 1.0
+            
+    def sub(self,name, amt = 0.0, virtual = False):
+        if amt < 0: return 0
+        if amt == 0: return 1
+        if not name in self.res:
+            self.res[name]=0.0
+        amtsub = min(amt, self.res[name])
+        self.res[name] -= amtsub
+        if not virtual:
+            self.mass -= amtsub
+        return amtsub/amt
+
+    def check(self,name, amt = 0.0):
+        if amt < 0: return 0
+        if amt == 0: return 1
+        if not name in self.res:
+            self.res[name]=0.0
+        amtsub = min(amt, self.res[name])
+        return amtsub/amt
+
+    def merge(self,resource):
+        for r in resource.res:
+            self.add(resource.res[r],affect_mass = False)
+        self.mass += resource.mass
         
-    def check(self,res):        
-        return tst_res(self.res, res)                                
-                        
-    def mass(self):
-        return sum( self.res.values() )
-        
-    def atrophy(self,dt):
-        self.res['electricity'] *= 0.9
-                        
+    def split(self,shopping_list):
+        fraction = 1.0
+        for s in shopping_list: #will only split off as much as the most limiting resource allows
+            fraction = min(fraction,self.check(shopping_list[s]))
+        outr = Resource()
+        #mass is not preserved in this case.  Handle later, somehow
+        for s in shopping_list:
+            self.sub(s,shopping_list[s]*fraction)
+            outr.add(s,shopping_list[s]*fraction)
+        return outr, fraction
+            
+
 
 def resource_dict():
     res = {}
@@ -69,28 +101,6 @@ def resource_dict():
     
     return res
     
-def add_res(res,newres):
-    for r in newres:
-        res[r] += newres[r]
-        newres[r] = 0
-    return res
-    
-def sub_res(res,subres):
-    newres = resource_dict()
-    for r in subres:
-        newres[r] = min(subres[r],res[r])
-        res[r] -= newres[r]
-    return res, newres
-        
-def tst_res(res,subres):
-    afford = True
-    for r in subres:
-        if r in res:
-            if subres[r] > res[r]:
-                afford = False
-        else:
-            #test needs
-            pass
-    return afford
+
                 
 
