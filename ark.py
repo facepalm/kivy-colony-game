@@ -10,7 +10,7 @@ class Ark(Structure):
     #antimatter containment: 1.21 jiggawatts * 3600 * 24 = 104544 E9 J ~= 1E14 J
     process =  [{   'name' : 'Power (Antimatter)', 
                     'input': {'antimatter':1}, 
-                    'output': {'electricity':1E16},
+                    'output': {'electricity|virtual':1E16},
                     'period': util.seconds(50,'days') },
                 
                 {   'name' : 'Antimatter Containment',
@@ -20,7 +20,7 @@ class Ark(Structure):
                     
                 {   'name' : 'Remote Exploration',
                     'input' : {'electricity':1E2},
-                    'output' : {'Exploration (System)' : 0.01 },
+                    'output' : {'Exploration (System)|virtual' : 0.01 },
                     'explore-limit' : 0.2,
                     'period': util.seconds(1,'year') }
                ]

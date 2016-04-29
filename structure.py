@@ -2,6 +2,7 @@
 import util
 import globalvars
 import shipimage
+import resource
 
 class Structure(object):
     recipes = [{'unobtanium':1}] #Contains a number of possible recipes for the creation of this structure
@@ -22,7 +23,7 @@ class Structure(object):
         self.image = None
         self.imagename = kwargs['imagename'] if 'imagename' in kwargs else 'Default'
         
-        util.register(self)
+        self.id = util.register(self)
         
         self.generate_image()
         
@@ -62,23 +63,23 @@ class Structure(object):
             
             #compute inputs, check inputs
             inputs = p['input'].copy()
-            run_process = True 
+            run_process = 1.0
             
             if not self.site: continue
             
             for i in inputs:
                 inputs[i] *= timeslice
-                assert inputs[i] != p['input'][i], "Sanity check: processing is changing input dictionary"
+                assert inputs[i] != p['input'][i] or timeslice == 1.0, "Sanity check: processing is changing input dictionary"
                 
                 #handle special case inputs here
                     
-            real_input = {k:v for k,v in inputs.items() if k in self.site.resources.res}
+            #real_input = {k:v for k,v in inputs.items() if k in self.site.resources.physical}
             
-            run_process = self.site.resources.check( real_input )
+            run_process = self.site.resources.cansplit( inputs )
             
             if run_process: #we doin this
                 #subtract inputs
-                self.site.resources.sub(real_input)
+                r,fraction = self.site.resources.split(inputs)
                 for i in inputs:
                     #special case stuff here
                     pass 
@@ -88,14 +89,18 @@ class Structure(object):
                 
                 for o in outputs:
                     outputs[o] *= timeslice    
+                    outputs[o] *= fraction
                     #handle special case inputs here
-                    if o == 'Exploration (System)':
+                    tagged, ro, tags = resource.untag(o) 
+                    
+                    if ro == 'Exploration (System)': #TODO move this to sites
                         limit = p['explore-limit'] if 'explore-limit' in p else 0.1                        
                         globalvars.universe.add_exploration(outputs[o],limit)
                     
-                real_output = {k:v for k,v in outputs.items() if k in self.site.resources.res}
-                
-                self.site.resources.add(real_output)
+                    
+                #real_output = {k:v for k,v in outputs.items() if k in self.site.resources.res}
+                    
+                    self.site.resources.add(ro,outputs[o], virtual = 'virtual' in tags)
                 
                 
             #handle outputs

@@ -95,4 +95,4 @@ class SiteEntrySmall(BoxLayout):
         touched = self.collide_point(*touch.pos)
         touch.pop()
         if touched:
-            print self.site.location, self.site.resources, self.site.effective_resources
+            print self.site.location, self.site.resources.virtual

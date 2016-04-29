@@ -1,59 +1,79 @@
 
-
+def untag(resourcename):
+    if '|' not in resourcename: return False, resourcename, []
+    restags = resourcename.split('|')
+    resname = restags.pop(0)
+    return True, resname, restags
 
 class Resource(object):
     def __init__(self):
-        self.res={}
+        self.physical = {}
+        self.virtual = {}
         self.virtual_limit = 10
-        self.mass = 0.0
 
-    def add(self,name,amt=0.0,virtual=False,affect_mass=True):
+    def add(self,name,amt=0.0,virtual=False):        
         if amt <= 0: return 0
-        if not name in self.res:
-            self.res[name]=0.0
-        if virtual:
-            amtadded = min(amt,self.res[name]*self.virtual_limit)
-            self.res[name] += amtadded
+        physorvirt = 'Virt' if name in self.virtual or virtual else 'Phys'
+        if physorvirt == 'Phys' and not name in self.physical:
+            self.physical[name]=0.0
+        elif physorvirt == 'Virt' and not name in self.virtual:    
+            self.virtual[name]=0.0
+            
+        if physorvirt == 'Virt':
+            amtadded = max(min(amt,amt*self.virtual_limit - self.virtual[name]),0)
+            self.virtual[name] += amtadded
             return amtadded/amt
         else:
-            self.res[name] += amt
-            if affect_mass: self.mass += amt
+            self.physical[name] += amt
             return 1.0
             
-    def sub(self,name, amt = 0.0, virtual = False):
+    def sub(self,name, amt = 0.0,virtual=False):
         if amt < 0: return 0
         if amt == 0: return 1
-        if not name in self.res:
-            self.res[name]=0.0
-        amtsub = min(amt, self.res[name])
-        self.res[name] -= amtsub
-        if not virtual:
-            self.mass -= amtsub
+        resdict = self.virtual if name in self.virtual or virtual else self.physical
+        if not name in resdict: return 0.0
+        amtsub = min(amt, resdict[name])
+        resdict[name] -= amtsub
         return amtsub/amt
 
-    def check(self,name, amt = 0.0):
+    def cansub(self,name, amt = 0.0):
         if amt < 0: return 0
         if amt == 0: return 1
-        if not name in self.res:
-            self.res[name]=0.0
-        amtsub = min(amt, self.res[name])
+        resdict = self.virtual if name in self.virtual else self.physical
+        if not name in resdict: return 0.0
+        amtsub = min(amt, resdict[name])
         return amtsub/amt
+        
+    def canadd(self,name, amt = 0.0):
+        if amt < 0: return 0
+        if amt == 0: return 1
+        resdict = self.virtual if name in self.virtual else self.physical
+        if resdict == self.physical or not name in resdict: return 1.0
+        amtadd = min(amt,amt*self.virtual_limit-self.virtual[name])
+        return amtadd/amt        
 
     def merge(self,resource):
-        for r in resource.res:
-            self.add(resource.res[r],affect_mass = False)
-        self.mass += resource.mass
+        for r in resource.physical:
+            self.add(resource.physical[r])
+        for r in resource.virtual:
+            self.add(resource.virtual[r],virtual=True)
         
     def split(self,shopping_list):
         fraction = 1.0
         for s in shopping_list: #will only split off as much as the most limiting resource allows
-            fraction = min(fraction,self.check(shopping_list[s]))
+            fraction = min(fraction,self.cansub(s,shopping_list[s]))
         outr = Resource()
         #mass is not preserved in this case.  Handle later, somehow
         for s in shopping_list:
             self.sub(s,shopping_list[s]*fraction)
-            outr.add(s,shopping_list[s]*fraction)
+            outr.add(s,shopping_list[s]*fraction, virtual = s in self.virtual)
         return outr, fraction
+        
+    def cansplit(self,shopping_list):
+        fraction = 1.0
+        for s in shopping_list: #will only split off as much as the most limiting resource allows
+            fraction = min(fraction,self.cansub(s,shopping_list[s]))
+        return fraction
             
 
 

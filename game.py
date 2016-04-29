@@ -49,7 +49,7 @@ class Universe(object):
         theArk.build(free=True)  
         newp[0].sites[0].stuff.append(theArk)
         theArk.site = newp[0].sites[0]
-        newp[0].sites[0].resources.add({'antimatter':1000})
+        newp[0].sites[0].resources.add('antimatter',1000)
         
         #print theArk.composition
         self.primary.view.system_view.update()

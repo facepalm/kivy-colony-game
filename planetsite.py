@@ -5,11 +5,13 @@ import globalvars
 import siteview
 import planetresources
 import resource
+import util
 
 class Site(object):
     def __init__(self,planet,location='Orbit'):
         self.planet = planet
         self.location = location
+        self.id = util.register(self)
         
         self.fancy_name = 'Orbit' if 'Orbit' in self.location else 'Ground Site'
         
@@ -36,3 +38,6 @@ class Site(object):
         self.occupied = 0
         for s in self.stuff:
             self.occupied = max(self.occupied, s.occupation_level)
+            
+            
+            
