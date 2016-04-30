@@ -63,7 +63,6 @@ class Resource(object):
         for s in shopping_list: #will only split off as much as the most limiting resource allows
             fraction = min(fraction,self.cansub(s,shopping_list[s]))
         outr = Resource()
-        #mass is not preserved in this case.  Handle later, somehow
         for s in shopping_list:
             self.sub(s,shopping_list[s]*fraction)
             outr.add(s,shopping_list[s]*fraction, virtual = s in self.virtual)

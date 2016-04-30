@@ -24,6 +24,7 @@ Builder.load_string("""
         id: screen_manager
         """)
 
+
 class GameRoot(AnchorLayout):  
     #blatantly swiped from http://www.pygopar.com/kivys-screenmanager-and-back-button/
     """ Root widget for app """
@@ -33,7 +34,11 @@ class GameRoot(AnchorLayout):
         super(GameRoot, self).__init__(*args, **kwargs)
         self.list_of_prev_screens = []
 
-    def onNextScreen(self, next_screen):
+    def onNextScreen(self, next_screen, transition='Slide'):
+        if transition == 'None':
+            self.screen_manager.transition = NoTransition()  
+        else:
+            self.screen_manager.transition = SlideTransition()
         if not self.list_of_prev_screens or (self.list_of_prev_screens[-1] is not self.screen_manager.current):
             self.list_of_prev_screens.append(self.screen_manager.current)
         self.screen_manager.current = next_screen
@@ -68,9 +73,7 @@ class GameApp(App):
             
             globalvars.universe = game.Universe()
             root.screen_manager.add_widget( IntroPanelView() )
-            root.screen_manager.transition= NoTransition()
-            root.onNextScreen('introscreen')            
-            root.screen_manager.transition= SlideTransition()
+            root.onNextScreen('introscreen','None')            
             #autosave?
             
         

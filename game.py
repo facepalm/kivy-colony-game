@@ -38,10 +38,15 @@ class Universe(object):
                 
             #initialize planet, extend list (might be a list of asteroids instead)    
             newp = planet.generate_planet(mass,self.primary,orbits[i])
+            for p in newp:
+                globalvars.root.screen_manager.add_widget(p.view)
+                print p.view.name, globalvars.root.screen_manager.children
             self.planets.extend(newp)
             
         #habitable zone world        
         newp = planet.generate_planet(random.random()*9E24 + 1E24,self.primary,self.primary.random_habitable_orbit())
+        for p in newp:
+            globalvars.root.screen_manager.add_widget(p.view)
         self.planets.extend(newp)  
         
         #instantiate Ark
@@ -53,6 +58,8 @@ class Universe(object):
         
         #print theArk.composition
         self.primary.view.system_view.update()
+        globalvars.root.screen_manager.add_widget(self.primary.view)      
+        globalvars.root.screen_manager.current = self.primary.view.name
 
     def update(self,dt):
         for obj in globalvars.ids.values():

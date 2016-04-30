@@ -100,7 +100,8 @@ class Planet(object):
         
         
         
-        self.view = systempanel.SystemView(primary=self)
+        #self.view = systempanel.SystemView(primary=self)
+        self.view = systempanel.SystemScreen(name=util.short_id(self.id)+"-system",primary=self)
         
     def initialize_sites(self):
         self.sites=[]
@@ -224,7 +225,7 @@ class Star(object):
         self.orbiting_bodies = []
         
         self.view = systempanel.SystemScreen(name=util.short_id(self.id)+"-system",primary=self)
-        globalvars.root.screen_manager.add_widget(self.view)
+        
 
     def primary_image(self):
         frac = 0.25        

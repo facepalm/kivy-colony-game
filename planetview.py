@@ -54,7 +54,7 @@ kv = '''
                 source: 'images/kivy/button_white.png'
                 pos: self.pos
                 size: self.size
-        BoxLayout:
+        FloatLayout:
             size_hint: 0.25, 0.25
 
             canvas:
@@ -69,6 +69,11 @@ kv = '''
                 size_hint: 1, 1
                 pos_hint: {'center_x': .5, 'center_y': .5}
                 source: panel.planet.image
+            Button:
+                size_hint: .2, .2
+                pos_hint: {'center_x': .88, 'center_y': .12}
+                text: "View"
+                on_press: panel.switch_system()
         BoxLayout:
             orientation: 'vertical'
             size_hint: 0.5, 0.25
@@ -83,12 +88,7 @@ kv = '''
                 text: "{0:.0f} % explored".format(100*panel.planet.explored)
                 font_size: 16
                 id: exploration_string
-        #FloatLayout:
-        #    size_hint: 0.25, 0.25
-            #Button:
-            #    size_hint: 0.90, 0.90
-            #    pos_hint: {'center_x': .5, 'center_y': .5}
-            #    text: "View"                                
+                              
         BoxLayout:
             size_hint: 0.25, 0.25
             id: resimg
@@ -156,6 +156,10 @@ class PlanetPanel(Screen):
             
         #Window.bind(on_keyboard=self.onBackBtn)        
 
+    def switch_system(self):
+        print 'switching to',self.planet.name
+        globalvars.root.onNextScreen(util.short_id(self.planet.id)+"-system" )
+    
         
     def on_pre_enter(self):
         self.ids['exploration_string'].text = "{0:.0f} % explored".format(100*self.planet.explored)
