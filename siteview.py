@@ -10,7 +10,7 @@ from kivy.uix.relativelayout import RelativeLayout
 from kivy.graphics import Line, Color, Rectangle
 from kivy.uix.scrollview import ScrollView
 from kivy.uix.widget import Widget
-
+from kivy.uix.screenmanager import Screen
 
 import math
 import numpy as np
@@ -20,7 +20,8 @@ from kivy.graphics.context_instructions import Scale
 from kivy.lang import Builder
 
 import globalvars
-import matplotlib.pyplot as plt
+
+import util
 
 entry_small_kv = '''
 <MineLoc@Widget>:
@@ -96,3 +97,73 @@ class SiteEntrySmall(BoxLayout):
         touch.pop()
         if touched:
             print self.site.location, self.site.resources.virtual
+            sname = util.short_id(self.site.id)+'-site'
+            if not globalvars.root.screen_manager.has_screen(sname):
+                s = SiteView(site=self.site)
+                globalvars.root.screen_manager.add_widget( s )
+            globalvars.root.onNextScreen(sname)
+            
+site_view_kv = '''
+<SiteView>:
+    id: sview
+    size_hint: 0.9, 0.9
+    pos_hint: {'center_x': .5, 'center_y': .5}
+    
+    BoxLayout:
+        id: panel2
+        size_hint: 1, 1
+        canvas:
+            Color:
+                rgb: (0.05, 0.05, 0.05)
+            Rectangle:
+                size: self.size
+                pos: self.pos  
+            Color:
+                rgb: (0.5, 0.5, 0.75)  
+            BorderImage:
+                border: 10,10,10,10
+                source: 'images/kivy/button_white.png'
+                pos: self.pos
+                size: self.size
+        BoxLayout:
+            pos_hint: {'x': 0, 'y':0}
+            size_hint: 0.25,0.75
+            canvas:
+                Color:
+                    rgb: (0.15, 0.05, 0.05)
+                Rectangle:
+                    size: self.size
+                    pos: self.pos  
+            StackLayout:
+                Label:
+                    text: 'Occupants'
+                ScrollView:
+                    Label:
+                        text: 'Ships'
+            
+                
+        BoxLayout:
+            pos_hint: {'right': 1, 'top':1}
+            size_hint: 0.75,0.25     
+            canvas:
+                Color:
+                    rgb: (0.05, 0.15, 0.05)
+                Rectangle:
+                    size: self.size
+                    pos: self.pos           
+            BoxLayout:                
+                Label:
+                    text: 'Site'
+                Label:
+                    text: 'Site info'
+                
+'''
+
+
+Builder.load_string(site_view_kv)            
+            
+class SiteView(Screen):
+    def __init__(self, **kwargs):
+        self.site = kwargs['site']
+        self.name = util.short_id(self.site.id)+'-site'
+        super(SiteView, self).__init__(**kwargs)                    
