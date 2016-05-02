@@ -1,12 +1,13 @@
-import util
 import numpy as np
-import planet
 from scipy.stats import wald
-import systempanel
 import random
-import globalvars
 
+import globalvars
+import systempanel
+import util
+import planet
 import ark
+import hohmann
 
 class Universe(object):    
     def __init__(self):
@@ -48,6 +49,8 @@ class Universe(object):
         for p in newp:
             globalvars.root.screen_manager.add_widget(p.view)
         self.planets.extend(newp)  
+        
+        hohmann.calculate_hohmann(random.choice(self.planets),random.choice(self.planets))
         
         #instantiate Ark
         theArk = ark.Ark()
