@@ -130,10 +130,12 @@ site_view_kv = '''
             size_hint: 0.25,0.75
             canvas:
                 Color:
-                    rgb: (0.15, 0.05, 0.05)
-                Rectangle:
-                    size: self.size
-                    pos: self.pos  
+                    rgb: (0.45, 0.45, 0.45)
+                BorderImage:
+                    border: 5,5,5,5
+                    source: 'images/kivy/button_white.png'
+                    pos: self.pos
+                    size: self.size 
             StackLayout:
                 Label:
                     text: 'Occupants'
@@ -145,12 +147,16 @@ site_view_kv = '''
         BoxLayout:
             pos_hint: {'right': 1, 'top':1}
             size_hint: 0.75,0.25     
-            canvas:
-                Color:
-                    rgb: (0.05, 0.15, 0.05)
-                Rectangle:
-                    size: self.size
-                    pos: self.pos           
+            
+            BoxLayout:                
+                Label:
+                    text: 'Site'
+                Label:
+                    text: 'Site info'
+        BoxLayout:
+            pos_hint: {'right': 1, 'y':0}
+            size_hint: 0.25,0.75     
+            
             BoxLayout:                
                 Label:
                     text: 'Site'
