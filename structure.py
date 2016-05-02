@@ -109,10 +109,13 @@ class Structure(object):
                         
         
         
-    def generate_image(self,clear=False):
+    def generate_image(self,clear=False, new=False):
         if clear: pass #handle deleting image here
+        if new: 
+            return shipimage.ShipImage(ship=self, source = shipimage.shipimages[self.imagename])
         if self.image is None:
             self.image = shipimage.ShipImage(ship=self, source = shipimage.shipimages[self.imagename])
+        
         
         
         

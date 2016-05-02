@@ -17,4 +17,4 @@ class ShipImage(Image):
     
     def __init__(self,**kwargs):
         super(ShipImage, self).__init__(**kwargs)
-        self.ship = kwargs['ship'] 
+        self.ship = kwargs['ship'] if 'ship' in kwargs else None
