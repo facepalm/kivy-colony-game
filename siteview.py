@@ -23,6 +23,7 @@ import globalvars
 
 import util
 import shipimage
+import transferview
 
 entry_small_kv = '''
 <MineLoc@Widget>:
@@ -216,6 +217,7 @@ site_view_kv = '''
                     text: 'Build'
                 Button:
                     text: 'Transfer'
+                    on_press: sview.start_transfer()
                 Label:
                     text: 'Button'
                 Label:
@@ -243,3 +245,10 @@ class SiteView(Screen):
         for s in self.site.stuff:    
             b = ShipTwist(ship=s, source = shipimage.shipimages[s.imagename])
             self.ids['shiplist'].add_widget(b)
+            
+    def start_transfer(self):
+        tname = util.short_id(self.site.id)+'-transfer'            
+        if not globalvars.root.screen_manager.has_screen(tname):
+            t = transferview.TransferView(site=self.site)
+            globalvars.root.screen_manager.add_widget( t )
+        globalvars.root.onNextScreen(tname)
