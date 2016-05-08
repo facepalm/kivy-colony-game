@@ -48,7 +48,7 @@ entry_small_kv = '''
             
     Label:
         size_hint: 0.25,1
-        text: entry.site.fancy_name  
+        text: 'Low Orbit' if 'Orbit' in entry.site.fancy_name else 'Ground Site'
     
     GridLayout:
         size_hint: 0.15,0.7
@@ -183,7 +183,7 @@ site_view_kv = '''
             
             BoxLayout:                
                 Label:
-                    text: 'Site'
+                    text: 'Low Orbit' if 'Orbit' in sview.site.fancy_name else 'Ground Site ' + sview.site.fancy_name
                 Label:
                     text: 'Site info'
         BoxLayout:

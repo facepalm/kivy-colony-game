@@ -45,6 +45,10 @@ def planet_name(planet=None,planet_type=None):
         
 load_names()        
 
+mil_names = ['Alpha', 'Bravo', 'Charlie', 'Delta', 'Echo', 'Foxtrot', 'Golf', 'Hotel', 'India', 'Juliett', 'Kilo', 'Lima', 'Mike', 'November', 'Oscar', 'Papa', 'Quebec', 'Romeo', 'Sierra', 'Tango', 'Uniform', 'Victor', 'Whiskey', 'X-ray', 'Yankee', 'Zulu']
+        
+def mil_name():
+    return random.choice(mil_names)+' '+random.choice(mil_names)
         
 if __name__ == "__main__":        
     print planet_name()
