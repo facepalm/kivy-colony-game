@@ -18,7 +18,11 @@ class Structure(object):
         
         self.occupation_level = 1
         
-        self.site=None
+        if 'site' in kwargs:
+            self.site = kwargs['site']
+            self.site.stuff.append(self)
+        else:
+            self.site = None
         
         self.image = None
         self.imagename = kwargs['imagename'] if 'imagename' in kwargs else 'Default'
@@ -118,6 +122,14 @@ class Structure(object):
         
         
         
-        
+class RTG(Structure):
+    recipes = [{'metal':20, 'enriched radioactives':5}] 
+
+    #TODO gradual decay of power?
+    process =  [{   'name' : 'Power (Continuous)', 
+                    'input': {}, 
+                    'output': {'electricity|virtual':125},
+                    'period': 1 }                    
+               ]
         
         

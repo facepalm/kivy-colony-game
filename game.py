@@ -7,6 +7,7 @@ import systempanel
 import util
 import planet
 import ark
+import structure
 import hohmann
 
 class Universe(object):    
@@ -53,11 +54,15 @@ class Universe(object):
         hohmann.calculate_hohmann(random.choice(self.planets),random.choice(self.planets))
         
         #instantiate Ark
-        theArk = ark.Ark()
+        theArk = ark.Ark(site=newp[0].sites[0])
         theArk.build(free=True)  
-        newp[0].sites[0].stuff.append(theArk)
-        theArk.site = newp[0].sites[0]
         newp[0].sites[0].resources.add('antimatter',1000)
+        newp[0].sites[0].resources.add('rocket engines',100)
+        newp[0].sites[0].resources.add('rocket fuel',1000)
+        
+        t = structure.RTG(site=newp[0].sites[0])
+        t.build(free=True)
+        
         
         #print theArk.composition
         self.primary.view.system_view.update()
