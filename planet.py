@@ -155,6 +155,7 @@ class Star(object):
     def __init__(self, solar_masses, name=None, logger=None):
         self.is_sun = True
         self.id = util.register(self)
+        self.primary = None
         self.solar_masses = solar_masses
         self.mass = self.solar_masses*2E30
         self.name = name if name else util.star_name(self)

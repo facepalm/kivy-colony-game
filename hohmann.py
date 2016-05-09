@@ -8,8 +8,49 @@ from math import pi
 class Orbit(object):
     def __init__(self, **kwargs):
         self.primary = kwargs['primary'] if 'primary' in kwargs else None
-        self.semimajor = kwargs['distance'] if 'distance' in kwargs else 1E6
-        
+        self.semimajor = kwargs['distance'] if 'distance' in kwargs else 1E6        
+    
+def transfer_breakdown(siteA, siteB):
+    transfer_list = []
+    
+    listA = []
+    A = siteA.planet
+    while A is not None:
+        listA.append(A)
+        A = A.primary
+    listA = list(reversed(listA))
+    
+    
+    
+    if 'Orbit' not in siteA.location:
+        transfer_list.append('Launch from '+siteA.fancy_name)
+
+    planetA = siteA.planet
+    planetB = siteB.planet
+    
+    listA = []
+    A = planetA
+    while A is not None:
+        listA.append(A)
+        A = A.primary
+    listA = list(reversed(listA))
+
+    listB = []
+    B = planetB
+    while B is not None:
+        listB.append(B)
+        B = B.primary
+    listB = list(reversed(listB))        
+            
+    lcp = None
+    i=0   
+    for i in range(min(len(listA),len(listB))):
+        if listA[i] == listB[i]:
+            lcp = listA[i]
+            
+    
+                
+    print listA, listB, lcp            
 
 #equations from https://en.wikipedia.org/wiki/Hohmann_transfer_orbit
 def calculate_hohmann(planetA, planetB):
