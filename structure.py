@@ -4,6 +4,8 @@ import globalvars
 import shipimage
 import resource
 
+    
+
 class Structure(object):
     recipes = [{'unobtanium':1}] #Contains a number of possible recipes for the creation of this structure
 
@@ -11,10 +13,12 @@ class Structure(object):
                 'output': {},
                 'period': util.seconds(1,'day') }]
 
+    root_name = 'Generic Structure'
+
     def __init__(self,**kwargs):
         self.built=False
         self.recipe = None
-        self.composition = None
+        self.composition = resource.Resource()
         
         self.occupation_level = 1
         
@@ -31,21 +35,23 @@ class Structure(object):
     def build(self, resources=None, free=False):
         if self.built: return resources
         if free:
-            self.composition = self.recipes[0]
+            self.recipe = self.recipes[0]
+            for r in self.recipes[0]:
+                self.composition.add(r,self.recipes[0][r])
             self.built = True
             return resources
         
-        for r in recipes:
-            if resources.check(self.recipes[r]):
+        for r in self.recipes:
+            if resources.cansplit(self.recipes[r]) >= 1.0:
                 self.recipe = r
                 break
         
         if not self.recipe:
             return resources
             
-        test, self.composition = resources.sub(self.recipes[self.recipe])
+        self.composition, test = resources.split(self.recipes[self.recipe])
         
-        if test: self.built = True
+        if test >= 1.0: self.built = True
         
         return resources
         
@@ -106,7 +112,8 @@ class Structure(object):
             #handle outputs
             
             
-                        
+    def name(self):
+        return self.root_name+'-'+util.short_id(self.id)                            
         
         
     def generate_image(self,clear=False, new=False):
@@ -118,6 +125,16 @@ class Structure(object):
         
         
         
-        
+class PlaceholderRegolithMiner(Structure):
+    recipes = [{'metal':1000, 'computronium':1}] 
+
+    process =  [{   'name' : 'Regolith Harvesting', 
+                    'input': {}, 
+                    'output': {'regolith|virtual':1000},
+                    'period': util.seconds(1,'days') }                                
+               ]
+
+    root_name = 'RegMiner'
+    
         
         

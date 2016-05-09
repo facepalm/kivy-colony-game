@@ -25,6 +25,8 @@ class Ark(Structure):
                     'period': util.seconds(1,'year') }
                ]
 
+    root_name = 'Ark'
+
     def __init__(self, **kwargs):
         if not 'imagename' in kwargs:
             kwargs['imagename'] = 'Ark'

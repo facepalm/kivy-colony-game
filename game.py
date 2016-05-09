@@ -8,6 +8,7 @@ import util
 import planet
 import ark
 import hohmann
+import structure
 
 class Universe(object):    
     def __init__(self):
@@ -58,6 +59,12 @@ class Universe(object):
         newp[0].sites[0].stuff.append(theArk)
         theArk.site = newp[0].sites[0]
         newp[0].sites[0].resources.add('antimatter',1000)
+        
+        reg = structure.PlaceholderRegolithMiner()
+        reg.build(free=True)  
+        newp[0].sites[0].stuff.append(reg)
+        reg.site = newp[0].sites[0]
+
         
         #print theArk.composition
         self.primary.view.system_view.update()
