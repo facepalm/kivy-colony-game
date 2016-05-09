@@ -63,7 +63,7 @@ trans_view_kv = '''
         id:treepanel
         do_scroll_x: False
         pos_hint: {'center_x': .5, 'center_y': .5}
-        size_hint: 1, 0.75
+        size_hint: 1, 1
         canvas:
             Color:
                 rgb: (0.5, 0.5, 0.75)              
@@ -107,7 +107,7 @@ class TransferView(Screen):
         right.ids['treepanel'].add_widget(dest_tree)
         
         super(TransferView, self).__init__(**kwargs)                    
-        print self.ids
+
         self.ids['mainpanel'].add_widget(left)
         self.ids['mainpanel'].add_widget(MidPanel())
         self.ids['mainpanel'].add_widget(right)
@@ -115,7 +115,7 @@ class TransferView(Screen):
         
 tree_view_kv = '''
 <TransferTree>:
-    
+    size_hint: 1, None
 
 '''        
 Builder.load_string(tree_view_kv)            
@@ -143,3 +143,16 @@ class TransferTree(TreeView):
                 n = self.add_node(l,node)
                 self.populate(n,o)
                       
+    #def on_touch_down(self, touch):
+    #    super(TransferTree, self).on_touch_down(touch)
+    #    #self.map.on_touch_down(touch)
+    #    return False                          
+                      
+    def on_node_expand(self,node, ):
+        #print self.minimum_height
+        self.height = self.minimum_height+200
+        #if self.parent: 
+            #self.parent.update_from_scroll()
+        #    print self.parent.viewport_size
+        #print self.size           
+                              
