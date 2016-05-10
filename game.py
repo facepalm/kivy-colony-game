@@ -9,6 +9,7 @@ import planet
 import ark
 import structure
 import hohmann
+import structure
 
 class Universe(object):    
     def __init__(self):
@@ -52,6 +53,8 @@ class Universe(object):
         self.planets.extend(newp)  
         
         hohmann.calculate_hohmann(random.choice(self.planets),random.choice(self.planets))
+        hohmann.transfer_breakdown(random.choice(random.choice(self.planets).sites),random.choice(random.choice(self.planets).sites))
+        #quit()
         
         #instantiate Ark
         theArk = ark.Ark(site=newp[0].sites[0])
@@ -63,6 +66,11 @@ class Universe(object):
         t = structure.RTG(site=newp[0].sites[0])
         t.build(free=True)
         
+        
+        reg = structure.PlaceholderRegolithMiner()
+        reg.build(free=True)  
+        newp[0].sites[0].stuff.append(reg)
+        reg.site = newp[0].sites[0]
         
         #print theArk.composition
         self.primary.view.system_view.update()

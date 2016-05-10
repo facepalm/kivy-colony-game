@@ -15,6 +15,7 @@ class Site(object):
         self.id = util.register(self)
         
         self.fancy_name = 'Orbit' if 'Orbit' in self.location else naming.mil_name()
+        self.name = self.fancy_name
         
         self.raw_resources = np.zeros(planetresources.raw_num,dtype='float32').squeeze() if 'Orbit' in self.location else np.multiply(2*np.random.random(planetresources.raw_num),self.planet.resources.raw)
         self.effective_resources = np.multiply(self.raw_resources, self.planet.resources.raw_dist)
