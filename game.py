@@ -19,7 +19,7 @@ class Universe(object):
     
         self.system_distribution = util.getWackyDist(total_mass = 1E29, objects = 20, wacky_facty = 0.5)
                             
-        primary_star_mass = wald.rvs(loc=0.2, scale=2, size=1)[0]
+        primary_star_mass = wald.rvs(loc=0.2, scale=1.5, size=1)[0]
         
         #self.system_distribution = self.system_distribution[self.system_distribution != primary_star_mass]
         

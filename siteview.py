@@ -75,9 +75,9 @@ entry_small_kv = '''
             opacity: 0.1 if entry.site.mine[7] > entry.site.explored else 1.0        
         MineLoc:
             opacity: 0.1 if entry.site.mine[8] > entry.site.explored else 1.0            
-    StackLayout:
+    BoxLayout:
         id: ships
-        orientation: 'tb-lr'
+        orientation: 'horizontal'
 '''
 
 
