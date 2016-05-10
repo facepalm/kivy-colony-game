@@ -55,4 +55,40 @@ class RawResourceSquare(GridLayout):
     def __init__(self, **kwargs):
         self.planetresources = kwargs['planetresources']
         super(RawResourceSquare, self).__init__(**kwargs)
+        
+        
+res_select_kv='''
+<ResourceItem>:
+    number: 0.0
+    selected: self.ids.myval.value
+    orientation: 'vertical'
+    name: ' ' 
+    padding: 3
+    Label: 
+        text: self.parent.name+': '+str(self.parent.selected)
+    Slider:
+        range: 0.0, float(self.parent.number)
+        id: myval
+        step: 1.0
+        value: 0.0
 
+<ResourceSelector>:
+    size_hint: 1, None
+    orientation: 'vertical'
+'''
+
+Builder.load_string(res_select_kv)
+
+class ResourceItem(BoxLayout):
+    pass
+
+class ResourceSelector(BoxLayout):
+    def __init__(self, **kwargs):
+        self.resources = kwargs['resources']
+        super(ResourceSelector, self).__init__(**kwargs)
+        
+        for r in self.resources.physical:
+            ri = ResourceItem()
+            ri.name = r
+            ri.number = self.resources.physical[r]
+            self.add_widget(ri)

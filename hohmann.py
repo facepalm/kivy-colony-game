@@ -13,6 +13,8 @@ class Orbit(object):
 def transfer_breakdown(siteA, siteB):
     transfer_list = []
     
+    
+    
     listA = []
     A = siteA.planet
     while A is not None:
@@ -20,38 +22,29 @@ def transfer_breakdown(siteA, siteB):
         A = A.primary
     listA = list(reversed(listA))
     
+    planetB = siteB.planet
+    if 'Orbit' not in siteB.location:
+        transfer_list.append(['Land',siteB])
     
+    B = planetB
+    while B.primary not in listA:
+        transfer_list.append(['Enter',B])
+        B = B.primary
+    
+    #TODO check for weirdness where A and B are not in the same system
+    lcpi = listA.index(B.primary)
+    if lcpi < len(listA)-1: transfer_list.append(['Transfer',listA[lcpi+1],B])
+    for i in range(lcpi+2,len(listA)):
+        transfer_list.append(['Escape',listA[i]])
+            
     
     if 'Orbit' not in siteA.location:
-        transfer_list.append('Launch from '+siteA.fancy_name)
+        transfer_list.append(['Launch',siteA])
 
-    planetA = siteA.planet
-    planetB = siteB.planet
+    transfer_list = list(reversed(transfer_list))
+
+    return transfer_list
     
-    listA = []
-    A = planetA
-    while A is not None:
-        listA.append(A)
-        A = A.primary
-    listA = list(reversed(listA))
-
-    listB = []
-    B = planetB
-    while B is not None:
-        listB.append(B)
-        B = B.primary
-    listB = list(reversed(listB))        
-            
-    lcp = None
-    i=0   
-    for i in range(min(len(listA),len(listB))):
-        if listA[i] == listB[i]:
-            lcp = listA[i]
-            
-    
-                
-    print listA, listB, lcp            
-
 #equations from https://en.wikipedia.org/wiki/Hohmann_transfer_orbit
 def calculate_hohmann(planetA, planetB):
     if planetA == planetB:
@@ -79,3 +72,8 @@ def calculate_hohmann(planetA, planetB):
     print 'dVs:',vee_1,vee_2,dee_vee, ' transit time:',time
     print 'Target angle:',target_angle
     
+    
+
+class TransferStep(object):
+    def __init__(self,transfer_type='Transfer',source=None,dest=None):    
+        pass

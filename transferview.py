@@ -8,7 +8,7 @@ from kivy.uix.treeview import TreeView, TreeViewLabel
 
 import globalvars
 import util
-
+import resource_views
 
 args_converter = lambda row_index, an_obj: {'text': an_obj.name(),
                                          'size_hint_y': None,
@@ -49,7 +49,21 @@ trans_view_kv = '''
                 border: 10,10,10,10
                 source: 'images/kivy/button_white.png'
                 pos: self.pos
-                size: self.size   
+                size: self.size 
+    BoxLayout:
+        id: resourcepanel
+        orientation: 'vertical'
+        padding: 15,15
+       
+        canvas:
+            Color:
+                rgb: (0.5, 0.5, 0.75)              
+            BorderImage:
+                border: 10,10,10,10
+                source: 'images/kivy/button_white.png'
+                pos: self.pos
+                size: self.size                  
+                 
 
 <MidPanel>:
     orientation: 'vertical'
@@ -95,12 +109,15 @@ class TransferView(Screen):
                            args_converter=args_converter,
                            cls=ListItemButton,
                            selection_mode='multiple',
-                           allow_empty_selection=False)
+                           allow_empty_selection=True)
 
         list_view = ListView(adapter=list_adapter)
 
+        resv = resource_views.ResourceSelector(resources=self.site.resources)
+
         left = LeftPanel()
         left.ids['shipchoicepanel'].add_widget(list_view)
+        left.ids['resourcepanel'].add_widget(resv)
         
         right = RightPanel()
         dest_tree = TransferTree()
