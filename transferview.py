@@ -4,15 +4,14 @@ from kivy.adapters.listadapter import ListAdapter
 from kivy.uix.listview import ListItemButton, ListView
 from kivy.uix.boxlayout import BoxLayout
 from kivy.uix.treeview import TreeView, TreeViewLabel
+from kivy.properties import NumericProperty
 
 
 import globalvars
 import util
 import resource_views
 
-args_converter = lambda row_index, an_obj: {'text': an_obj.name(),
-                                         'size_hint_y': None,
-                                         'height': 25}
+
 
 
 trans_view_kv = '''
@@ -67,6 +66,18 @@ trans_view_kv = '''
 
 <MidPanel>:
     orientation: 'vertical'
+    ship_mass: 0
+    destination: None
+    resources: None
+    
+    BoxLayout:
+        orientation: 'vertical'
+        Label:
+            text: str(root.ship_mass)
+    BoxLayout:
+        orientation: 'vertical'
+        Label:
+            text: 'Buttons go here'
 
 <RightPanel>:
     orientation: 'vertical'
@@ -86,16 +97,35 @@ trans_view_kv = '''
                 source: 'images/kivy/button_white.png'
                 pos: self.pos
                 size: self.size   
-        
-    
-'''
+'''        
+
+args_converter = lambda row_index, an_obj: {'size_hint_y': None,
+                                         'height': 25,
+                                         'ident': an_obj.id,
+                                         'ship': an_obj}
+
 Builder.load_string(trans_view_kv)            
+
+class CustomListItem(ListItemButton):
+    def __init__(self, **kwargs):
+        self.ship=kwargs['ship']
+        self.ident=kwargs['ident']
+        self.text = self.ship.name()
+        super(CustomListItem, self).__init__(**kwargs)       
 
 class LeftPanel(BoxLayout):
     pass
 
 class MidPanel(BoxLayout):
-    pass
+    ship_mass = NumericProperty()
+
+    def ships_changed(self, ship_adapter, *args):
+        ship_mass = 0
+
+        for ship in ship_adapter.selection:    
+            ship_mass += float(ship.ship.mass())
+        self.ship_mass = ship_mass            
+
     
 class RightPanel(BoxLayout):
     pass    
@@ -105,13 +135,19 @@ class TransferView(Screen):
         self.site = kwargs['site']
         self.name = util.short_id(self.site.id)+'-transfer'
         
+        mid = MidPanel()
+        
+        print self.site.stuff
+        
         list_adapter = ListAdapter(data=self.site.stuff,
                            args_converter=args_converter,
-                           cls=ListItemButton,
+                           cls=CustomListItem,
                            selection_mode='multiple',
                            allow_empty_selection=True)
 
         list_view = ListView(adapter=list_adapter)
+        list_adapter.bind(on_selection_change = mid.ships_changed)
+    
 
         resv = resource_views.ResourceSelector(resources=self.site.resources)
 
@@ -126,7 +162,7 @@ class TransferView(Screen):
         super(TransferView, self).__init__(**kwargs)                    
 
         self.ids['mainpanel'].add_widget(left)
-        self.ids['mainpanel'].add_widget(MidPanel())
+        self.ids['mainpanel'].add_widget(mid)
         self.ids['mainpanel'].add_widget(right)
         
         

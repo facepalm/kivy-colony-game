@@ -116,7 +116,9 @@ class Structure(object):
             
     def name(self):
         return self.root_name+'-'+util.short_id(self.id)                            
-        
+
+    def mass(self):
+        return self.composition.mass()        
         
     def generate_image(self,clear=False, new=False):
         if clear: pass #handle deleting image here

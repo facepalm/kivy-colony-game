@@ -74,7 +74,11 @@ class Resource(object):
             fraction = min(fraction,self.cansub(s,shopping_list[s]))
         return fraction
             
-
+    def mass(self):
+        mass = 0 
+        for p in self.physical.values():
+            mass += p
+        return mass
 
 def resource_dict():
     res = {}

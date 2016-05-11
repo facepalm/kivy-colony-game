@@ -67,10 +67,9 @@ class Universe(object):
         t.build(free=True)
         
         
-        reg = structure.PlaceholderRegolithMiner()
+        reg = structure.PlaceholderRegolithMiner(site=newp[0].sites[0])
         reg.build(free=True)  
-        newp[0].sites[0].stuff.append(reg)
-        reg.site = newp[0].sites[0]
+
         
         #print theArk.composition
         self.primary.view.system_view.update()
