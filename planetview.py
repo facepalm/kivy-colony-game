@@ -82,7 +82,7 @@ kv = '''
                 text: panel.planet.type + ' "' + panel.planet.name + '"'
                 font_size: 24
             Label:
-                text: "Orbit: %.2f AU   Launch dV: %.2f km/s" % (panel.planet.orbit, panel.planet.launch_dv/1000)
+                text: "Orbit: %.2f AU   Launch dV: %.2f km/s" % (panel.planet.orbit, panel.planet.launch_dv()/1000)
                 font_size: 16
             Label:
                 text: "{0:.0f} % explored".format(100*panel.planet.explored)

@@ -40,7 +40,7 @@ class Planet(object):
         a = self.orbit * 149597870700.
         self.orbital_period = 2 * math.pi * pow(pow(a,3)/mu,0.5)
         
-        self.launch_dv = pow( mmu/ (self.radius + 500000) , 0.5 )
+        #self.launch_dv = pow( mmu/ (self.radius + 500000) , 0.5 )
         
         if logger:
             self.logger = logging.getLogger(logger.name + '.' + self.name)
@@ -102,6 +102,16 @@ class Planet(object):
         
         #self.view = systempanel.SystemView(primary=self)
         self.view = systempanel.SystemScreen(name=util.short_id(self.id)+"-system",primary=self)
+        
+    def escape_velocity(self):
+        mmu = 6.674E-11 * self.mass                
+        v = pow( 2*mmu/ (self.radius + 500000.0) , 0.5 ) - self.launch_dv()
+        return v
+
+    def launch_dv(self):
+        mmu = 6.674E-11 * self.mass
+        return pow( mmu/ (self.radius + 500000) , 0.5 )
+                
         
     def initialize_sites(self):
         self.sites=[]
