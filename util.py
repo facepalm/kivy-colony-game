@@ -83,7 +83,7 @@ def seconds(time=1,units='minutes'):
                                          
                                          
 def short_id(long_id):
-    return string.upper(long_id[0:6])                                                
+    return string.upper(long_id[0:4])                                                
                                          
 def vec_dist(a,b):
     diff = b-a

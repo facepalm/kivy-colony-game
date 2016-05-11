@@ -72,10 +72,22 @@ trans_view_kv = '''
     
     BoxLayout:
         orientation: 'vertical'
+        size_hint: 1,.1
+    BoxLayout:
+        orientation: 'vertical'   
+        pos_hint: {'center_x': .5, 'center_y': .25}   
+        size_hint: .9,.9
+        canvas:
+            Color:
+                rgb: (0.05, 0.05, 0.05)
+            Rectangle:
+                size: self.size
+                pos: self.pos
         Label:
-            text: str(root.ship_mass)
+            text: 'Transfer mass: '+str(root.ship_mass)
     BoxLayout:
         orientation: 'vertical'
+        size_hint: 1,1
         Label:
             text: 'Buttons go here'
 

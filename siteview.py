@@ -188,8 +188,8 @@ site_view_kv = '''
                 Label:
                     text: 'Site info'
         BoxLayout:
-            pos_hint: {'center_x': 0.5, 'y':0}
-            size_hint: 0.5,0.75     
+            pos_hint: {'center_x': 0.5, 'y':0.02}
+            size_hint: 0.48,0.73     
             id: panel
             display: 'Info'
             canvas:
