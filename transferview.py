@@ -138,6 +138,9 @@ class MidPanel(BoxLayout):
             ship_mass += float(ship.ship.mass())
         self.ship_mass = ship_mass            
 
+    def dest_selected(self,tree,node):
+        print args
+        print node.text
     
 class RightPanel(BoxLayout):
     pass    
@@ -169,6 +172,7 @@ class TransferView(Screen):
         
         right = RightPanel()
         dest_tree = TransferTree()
+        
         right.ids['treepanel'].add_widget(dest_tree)
         
         super(TransferView, self).__init__(**kwargs)                    
@@ -211,7 +215,7 @@ class TransferTree(TreeView):
     #def on_touch_down(self, touch):
     #    super(TransferTree, self).on_touch_down(touch)
     #    #self.map.on_touch_down(touch)
-    #    return False                          
+    #    return False     
                       
     def on_node_expand(self,node, ):
         #print self.minimum_height
