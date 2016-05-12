@@ -4,7 +4,7 @@ from kivy.adapters.listadapter import ListAdapter
 from kivy.uix.listview import ListItemButton, ListView
 from kivy.uix.boxlayout import BoxLayout
 from kivy.uix.treeview import TreeView, TreeViewLabel
-from kivy.properties import NumericProperty
+from kivy.properties import NumericProperty, ObjectProperty
 
 
 import globalvars
@@ -138,9 +138,8 @@ class MidPanel(BoxLayout):
             ship_mass += float(ship.ship.mass())
         self.ship_mass = ship_mass            
 
-    def dest_selected(self,tree,node):
-        print args
-        print node.text
+    def dest_selected(self,tree,site):    
+        print site
     
 class RightPanel(BoxLayout):
     pass    
@@ -172,6 +171,7 @@ class TransferView(Screen):
         
         right = RightPanel()
         dest_tree = TransferTree()
+        dest_tree.bind(selected_site = mid.dest_selected)
         
         right.ids['treepanel'].add_widget(dest_tree)
         
@@ -190,6 +190,8 @@ tree_view_kv = '''
 Builder.load_string(tree_view_kv)            
 
 class TransferTree(TreeView):
+    selected_site = ObjectProperty()
+
     def __init__(self, **kwargs):    
         self.system = kwargs['system'] if 'system' in kwargs else globalvars.universe.primary
         super(TransferTree, self).__init__(**kwargs)                    
@@ -202,13 +204,15 @@ class TransferTree(TreeView):
         if hasattr(body,'orbiting_bodies'):
             if node: node.no_selection=True
             for o in body.orbiting_bodies:
-                l = TreeViewLabel(text=o.name)
+                l = TreeViewLabel(text=o.name) 
+                l.site = None               
                 n = self.add_node(l,node)
                 self.populate(n,o)
         if hasattr(body,'sites'):
             if node: node.no_selection=True
             for o in body.sites:
                 l = TreeViewLabel(text=o.name)
+                l.site = o
                 n = self.add_node(l,node)
                 self.populate(n,o)
                       
@@ -216,6 +220,9 @@ class TransferTree(TreeView):
     #    super(TransferTree, self).on_touch_down(touch)
     #    #self.map.on_touch_down(touch)
     #    return False     
+    
+    def on_selected_node(self,tree,node):        
+        self.selected_site = node.site
                       
     def on_node_expand(self,node, ):
         #print self.minimum_height
