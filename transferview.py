@@ -145,7 +145,7 @@ class MidPanel(BoxLayout):
         #generate trip object
         start = self.parent.parent.site       
         self.trip = hohmann.Transfer(start,site)
-        self.ids['dest_label'].text = 'Est dV: %.2f km/s' % (self.trip.dv()/1000.0)
+        self.ids['dest_label'].text = 'Est dV: %.2f km/s \nDuration: %s \nBurn in: %s' % ((self.trip.dv()/1000.0),util.short_timestring(self.trip.duration()),util.short_timestring(self.trip.timing()))
     
 class RightPanel(BoxLayout):
     pass    

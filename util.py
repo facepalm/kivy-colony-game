@@ -72,6 +72,17 @@ def timestring(seconds):
     return time    
     
     
+def short_timestring(seconds):
+    seconds = int(seconds)
+    if seconds > 2592000*12:
+        return '%.2f years' % (seconds/(2592000.*12))
+    if seconds > 2592000:
+        return '%.2f months' % (seconds/2592000.)
+    if seconds > 86400:
+        return '%.2f days' % (seconds/86400.)
+    if seconds > 3600:
+        return '%.2f hours' % (seconds/3600.)
+    return '%.2f seconds' % seconds
     
 def seconds(time=1,units='minutes'):
     return time*60 if units == 'minutes' or units == 'minute' \

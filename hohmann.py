@@ -56,6 +56,12 @@ class Transfer(object):
     def dv(self):
         return reduce( (lambda x, y: x + y), [s.dv for s in self.stages] )       
         
+    def duration(self):
+        return reduce( (lambda x, y: x + y), [s.duration for s in self.stages] ) 
+        
+    def timing(self):
+        return reduce( (lambda x, y: x + y), [s.timing for s in self.stages] )                 
+        
 
 class TransferStep(object):
     def __init__(self,transfer_type='Transfer',source=None,dest=None):    
@@ -92,6 +98,7 @@ class TransferStep(object):
             self.dv = abs(self.hohmann_string[2])
             self.duration = self.hohmann_string[3]
             self.min_impulse = self.dv/self.duration
+            self.timing = self.hohmann_string[4]
             
             
 #equations from https://en.wikipedia.org/wiki/Hohmann_transfer_orbit
@@ -118,14 +125,25 @@ def calculate_hohmann(planetA, planetB):
     
     target_angle = target_angle % (2*pi)
     
-    #TODO check if it's supposed to be planetA - planetB instead
-    curr_angle = planetB.orbit_pos - planetA.orbit_pos
-    deriv_angle = w2 - w1
+    curr_angle = (planetB.orbit_pos - planetA.orbit_pos) % (2*pi)
+    angular_v = w2 - w1        
     
+    if angular_v > 0:
+        ang_dist = target_angle + 2*pi - curr_angle
+        ang_dist = ang_dist % (2*pi)
+    else:
+        ang_dist = target_angle - 2*pi - curr_angle
+        ang_dist = ang_dist % (2*pi) - (2*pi)
+    
+    
+    #ang_dist = target_angle + 2*pi if (target_angle - curr_angle)*angular_v < 0 else target_angle
+    #ang_dist -= curr_angle
+    go_time = ang_dist/angular_v
     
     print "Hohmann transfer from ",planetA.name,' to ',planetB.name
     print 'radii:',r1, r2
     print 'dVs:',vee_1,vee_2,dee_vee, ' transit time:',time
-    print 'Target angle:',target_angle
+    print 'Target angle:',target_angle,' Current angle:',curr_angle
+    print 'Transfer in:',go_time,'s'
     
-    return vee_1, vee_2, dee_vee, time            
+    return vee_1, vee_2, dee_vee, time, go_time      
