@@ -11,42 +11,89 @@ class Orbit(object):
     def __init__(self, **kwargs):
         self.primary = kwargs['primary'] if 'primary' in kwargs else None
         self.semimajor = kwargs['distance'] if 'distance' in kwargs else 1E6        
+      
     
-def transfer_breakdown(siteA, siteB):
-    transfer_list = []
-    
-    
-    
-    listA = []
-    A = siteA.planet
-    while A is not None:
-        listA.append(A)
-        A = A.primary
-    listA = list(reversed(listA))
-    
-    planetB = siteB.planet
-    if 'Orbit' not in siteB.location:
-        transfer_list.append(['Land',None,siteB])
-    
-    B = planetB
-    while B.primary not in listA:
-        transfer_list.append(['Enter',None,B])
-        B = B.primary
-    
-    #TODO check for weirdness where A and B are not in the same system
-    lcpi = listA.index(B.primary)
-    if lcpi < len(listA)-1: transfer_list.append(['Transfer',listA[lcpi+1],B])
-    for i in range(lcpi+2,len(listA)):
-        transfer_list.append(['Escape',listA[i],None])
+class Transfer(object):
+    def __init__(self,start_site,end_site):
+        self.start = start_site
+        self.end = end_site
+        
+        self.transfer_breakdown()
+
+    def transfer_breakdown(self):
+        transfer_list = []                
+        
+        listA = []
+        A = self.start.planet
+        while A is not None:
+            listA.append(A)
+            A = A.primary
+        listA = list(reversed(listA))
+        
+        planetB = self.end.planet
+        if 'Orbit' not in self.end.location:
+            transfer_list.append(TransferStep('Land',None,self.end))
+        
+        B = planetB
+        while B.primary not in listA:
+            transfer_list.append(TransferStep('Enter',None,B))
+            B = B.primary
+        
+        #TODO check for weirdness where A and B are not in the same system
+        lcpi = listA.index(B.primary)
+        if lcpi < len(listA)-1: transfer_list.append(TransferStep('Transfer',listA[lcpi+1],B))
+        for i in range(lcpi+2,len(listA)):
+            transfer_list.append(TransferStep('Escape',listA[i],None))
+                
+        
+        if 'Orbit' not in self.start.location:
+            transfer_list.append(TransferStep('Launch',siteA,None))
+
+        transfer_list = list(reversed(transfer_list))
+
+        self.stages = transfer_list
+        
+    def dv(self):
+        return reduce( (lambda x, y: x + y), [s.dv for s in self.stages] )       
+        
+
+class TransferStep(object):
+    def __init__(self,transfer_type='Transfer',source=None,dest=None):    
+        self.transfer_type = transfer_type
+        self.source = source
+        self.dest = dest
+        self.timing = 0.0 #transfer can start timing seconds from now
+        self.duration = 0.0 #how long this phase takes
+        self.min_impulse = 0.0 #how much oomph we need for it
+        self.dv = 0.0 # dv required for this leg
+        
+        self.init_transfer()
+
+    def init_transfer(self):
+        if self.transfer_type == 'Launch':
+            assert isinstance(self.source,planetsite.Site) and 'Orbit' not in self.source.location, 'Source for launch is not a ground site.  What gives?'
+            self.duration = 600.0 #about ten minutes to reach orbit
+            self.dv = self.source.planet.launch_dv()
+            self.min_impulse = self.dv/self.duration
+        elif self.transfer_type == 'Land':
+            assert isinstance(self.dest,planetsite.Site) and 'Orbit' not in self.dest.location, 'Something wrong with the landing parameters!'
+            self.duration = 600.0 #about ten minutes to land
+            self.dv = self.dest.planet.launch_dv() #considering propulsive landing only, for now
+            self.min_impulse = self.dv/self.duration
+        elif self.transfer_type == 'Escape':
+            assert (isinstance(self.source,planet.Planet) or isinstance(self.source,planet.Sun)) and self.source.primary is not None, 'Something wrong with our escape trajectory!'           
+            self.dv = self.source.escape_velocity() 
+        elif self.transfer_type == 'Enter':
+            assert (isinstance(self.dest,planet.Planet) or isinstance(self.dest,planet.Sun)) and self.dest.primary is not None, 'Something wrong with our entry trajectory!'          
+            self.dv = self.dest.escape_velocity()       
+        elif self.transfer_type == 'Transfer':
+            #assume hohmann for now
+            self.hohmann_string = calculate_hohmann(self.source,self.dest)            
+            self.dv = abs(self.hohmann_string[2])
+            self.duration = self.hohmann_string[3]
+            self.min_impulse = self.dv/self.duration
             
-    
-    if 'Orbit' not in siteA.location:
-        transfer_list.append(['Launch',siteA,None])
-
-    transfer_list = list(reversed(transfer_list))
-
-    return transfer_list
-    
+            
 #equations from https://en.wikipedia.org/wiki/Hohmann_transfer_orbit
 def calculate_hohmann(planetA, planetB):
     if planetA == planetB:
@@ -81,38 +128,4 @@ def calculate_hohmann(planetA, planetB):
     print 'dVs:',vee_1,vee_2,dee_vee, ' transit time:',time
     print 'Target angle:',target_angle
     
-    return vee_1, vee_2, dee_vee, time
-    
-    
-
-class TransferStep(object):
-    def __init__(self,transfer_type='Transfer',source=None,dest=None):    
-        self.transfer_type = transfer_type
-        self.source = source
-        self.dest = dest
-        self.timing = 0.0 #transfer can start timing seconds from now
-        self.duration = 0.0 #how long this phase takes
-        self.min_impulse = 0.0 #how much oomph we need for it
-        self.dv = 0.0 # dv required for this leg
-        
-        self.init_transfer()
-
-    def init_transfer(self):
-        if self.transfer_type == 'Launch':
-            assert isinstance(self.source,planetsite.Site) and 'Orbit' not in self.source.location, 'Source for launch is not a ground site.  What gives?'
-            self.duration = 600.0 #about ten minutes to reach orbit
-            self.dv = self.source.planet.launch_dv()
-            self.min_impulse = self.dv/self.duration
-        elif self.transfer_type == 'Land':
-            assert isinstance(self.dest,planetsite.Site) and 'Orbit' not in self.dest.location, 'Something wrong with the landing parameters!'
-            self.duration = 600.0 #about ten minutes to land
-            self.dv = self.source.planet.launch_dv() #considering propulsive landing only, for now
-            self.min_impulse = self.dv/self.duration
-        elif self.transfer_type == 'Escape':
-            assert (isinstance(self.source,planet.Planet) or isinstance(self.source,planet.Sun)) and self.source.primary is not None, 'Something wrong with our escape trajectory!'           
-            self.dv = self.source.escape_velocity() 
-        elif self.transfer_type == 'Enter':
-            assert (isinstance(self.dest,planet.Planet) or isinstance(self.dest,planet.Sun)) and self.dest.primary is not None, 'Something wrong with our entry trajectory!'          
-            self.dv = self.dest.escape_velocity()       
-        elif self.transfer_type == 'Transfer':
-            pass
+    return vee_1, vee_2, dee_vee, time            

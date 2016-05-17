@@ -52,8 +52,8 @@ class Universe(object):
             globalvars.root.screen_manager.add_widget(p.view)
         self.planets.extend(newp)  
         
-        hohmann.calculate_hohmann(random.choice(self.planets),random.choice(self.planets))
-        hohmann.transfer_breakdown(random.choice(random.choice(self.planets).sites),random.choice(random.choice(self.planets).sites))
+        #hohmann.calculate_hohmann(random.choice(self.planets),random.choice(self.planets))
+        #hohmann.transfer_breakdown(random.choice(random.choice(self.planets).sites),random.choice(random.choice(self.planets).sites))
         #quit()
         
         #instantiate Ark

@@ -10,7 +10,7 @@ from kivy.properties import NumericProperty, ObjectProperty
 import globalvars
 import util
 import resource_views
-
+import hohmann
 
 
 
@@ -85,6 +85,9 @@ trans_view_kv = '''
                 pos: self.pos
         Label:
             text: 'Transfer mass: '+str(root.ship_mass)
+        Label:
+            id: dest_label
+            text: ''
     BoxLayout:
         orientation: 'vertical'
         size_hint: 1,1
@@ -138,8 +141,11 @@ class MidPanel(BoxLayout):
             ship_mass += float(ship.ship.mass())
         self.ship_mass = ship_mass            
 
-    def dest_selected(self,tree,site):    
-        print site
+    def dest_selected(self,tree,site):
+        #generate trip object
+        start = self.parent.parent.site       
+        self.trip = hohmann.Transfer(start,site)
+        self.ids['dest_label'].text = 'Est dV: %.2f km/s' % (self.trip.dv()/1000.0)
     
 class RightPanel(BoxLayout):
     pass    
