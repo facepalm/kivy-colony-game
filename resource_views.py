@@ -2,6 +2,9 @@
 from kivy.uix.gridlayout import GridLayout
 from kivy.uix.boxlayout import BoxLayout
 from kivy.lang import Builder
+from kivy.properties import NumericProperty, ObjectProperty, BooleanProperty
+
+import resource
 
 Builder.load_string("""
 <ResourceEntry>:    
@@ -81,14 +84,33 @@ Builder.load_string(res_select_kv)
 
 class ResourceItem(BoxLayout):
     pass
-
+      
 class ResourceSelector(BoxLayout):
+    selected_resources = ObjectProperty()
+    res_changed = BooleanProperty(False)
+
     def __init__(self, **kwargs):
         self.resources = kwargs['resources']
+        
+        self.selected_resources = resource.Resource()
+        
         super(ResourceSelector, self).__init__(**kwargs)
         
         for r in self.resources.physical:
             ri = ResourceItem()
             ri.name = r
             ri.number = self.resources.physical[r]
+            ri.id = r
             self.add_widget(ri)
+            self.ids[r] = ri
+            ri.bind(selected = self.refresh_selected)
+            
+    def refresh_selected(self, *args):
+        new_dict = dict()
+        for r in self.resources.physical:           
+            new_dict[r] = self.ids[r].selected
+        self.selected_resources.redefine(new_dict, None)    
+        self.res_changed = not self.res_changed   
+        
+        
+        

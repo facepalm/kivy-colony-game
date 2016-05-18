@@ -146,6 +146,10 @@ class MidPanel(BoxLayout):
         start = self.parent.parent.site       
         self.trip = hohmann.Transfer(start,site)
         self.ids['dest_label'].text = 'Est dV: %.2f km/s \nDuration: %s \nBurn in: %s' % ((self.trip.dv()/1000.0),util.short_timestring(self.trip.duration()),util.short_timestring(self.trip.timing()))
+        
+    def res_changed(self, selector, value):
+        res_model = selector.selected_resources
+        
     
 class RightPanel(BoxLayout):
     pass    
@@ -170,6 +174,7 @@ class TransferView(Screen):
     
 
         resv = resource_views.ResourceSelector(resources=self.site.resources)
+        resv.bind(res_changed = mid.res_changed)
 
         left = LeftPanel()
         left.ids['shipchoicepanel'].add_widget(list_view)

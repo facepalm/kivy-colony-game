@@ -11,6 +11,10 @@ class Resource(object):
         self.virtual = {}
         self.virtual_limit = 10
 
+    def redefine(self,physical_dict = None,virtual_dict = None):
+        if physical_dict is not None: self.physical = physical_dict.copy()
+        if virtual_dict is not None: self.virtual = virtual_dict.copy()
+
     def add(self,name,amt=0.0,virtual=False):        
         if amt <= 0: return 0
         physorvirt = 'Virt' if name in self.virtual or virtual else 'Phys'
