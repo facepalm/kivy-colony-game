@@ -56,12 +56,18 @@ class Transfer(object):
     def dv(self):
         return reduce( (lambda x, y: x + y), [s.dv for s in self.stages] )       
         
+    def high_dv(self):
+        return reduce( (lambda x, y: x + y), [s.dv for s in self.stages if s.min_impulse > 0] )        
+        
     def duration(self):
         return reduce( (lambda x, y: x + y), [s.duration for s in self.stages] ) 
         
     def timing(self):
         return reduce( (lambda x, y: x + y), [s.timing for s in self.stages] )                 
         
+
+    def calculate(self):
+        pass
 
 class TransferStep(object):
     def __init__(self,transfer_type='Transfer',source=None,dest=None):    

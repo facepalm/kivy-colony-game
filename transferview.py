@@ -134,22 +134,38 @@ class LeftPanel(BoxLayout):
 class MidPanel(BoxLayout):
     ship_mass = NumericProperty()
 
+    def __init__(self, **kwargs):
+        super(MidPanel, self).__init__(**kwargs)
+        self.res_model = None
+        self.ship_mass = 0
+        self.trip = None
+
     def ships_changed(self, ship_adapter, *args):
         ship_mass = 0
 
         for ship in ship_adapter.selection:    
             ship_mass += float(ship.ship.mass())
         self.ship_mass = ship_mass            
+        self.compute_trip()
 
     def dest_selected(self,tree,site):
         #generate trip object
         start = self.parent.parent.site       
         self.trip = hohmann.Transfer(start,site)
-        self.ids['dest_label'].text = 'Est dV: %.2f km/s \nDuration: %s \nBurn in: %s' % ((self.trip.dv()/1000.0),util.short_timestring(self.trip.duration()),util.short_timestring(self.trip.timing()))
+        self.compute_trip()
         
     def res_changed(self, selector, value):
-        res_model = selector.selected_resources
-        
+        self.res_model = selector.selected_resources
+        self.compute_trip()
+
+    def compute_trip(self):
+        if not self.trip:
+            self.ids['dest_label'].text = 'No destination selected!"   
+            return
+        self.ids['dest_label'].text = 'Est dV: %.2f km/s \nDuration: %s \nBurn in: %s' % ((self.trip.dv()/1000.0),util.short_timestring(self.trip.duration()),util.short_timestring(self.trip.timing()))
+        self.trip.dry_mass = self.ship_mass
+        self.trip.resources = self.res_model
+        self.trip.calculate()
     
 class RightPanel(BoxLayout):
     pass    
