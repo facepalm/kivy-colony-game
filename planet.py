@@ -15,11 +15,18 @@ import planetresources
 import planetsite
 
 def generate_planet(mass,sun,orbit):
-    p = Planet(mass,sun,orbit)
-    #eventually walk through planetary history - greenhouse events, asteroidation, etc
-    
-    sun.orbiting_bodies.extend([p])
-    return [p]
+    if random.random() < 0.05:
+        #make asteroid belt instead
+        ast=[]
+        for i in range(12):
+            ast.append( Planet(mass/(10 + 4*random.random()),sun,orbit*.95 + orbit*.1*random.random()) )
+        sun.orbiting_bodies.extend(ast)
+        return ast
+    else:
+        p = Planet(mass,sun,orbit)
+        #eventually walk through planetary history - greenhouse events, asteroidation, etc    
+        sun.orbiting_bodies.extend([p])
+        return [p]
 
 class Planet(object):
     def __init__(self,mass=None,sun=None,orbit=None,name=None, logger=None):
