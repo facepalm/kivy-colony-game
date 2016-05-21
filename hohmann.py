@@ -18,6 +18,9 @@ class Transfer(object):
         self.start = start_site
         self.end = end_site
         
+        self.dry_mass=None
+        self.resources=None
+        
         self.transfer_breakdown()
 
     def transfer_breakdown(self):
@@ -67,7 +70,10 @@ class Transfer(object):
         
 
     def calculate(self):
-        pass
+        peak_accel = reduce( (lambda x, y: max(x,y)), [s.min_accel for s in self.stages] )  
+        
+        
+        
 
 class TransferStep(object):
     def __init__(self,transfer_type='Transfer',source=None,dest=None):    
@@ -76,7 +82,7 @@ class TransferStep(object):
         self.dest = dest
         self.timing = 0.0 #transfer can start timing seconds from now
         self.duration = 0.0 #how long this phase takes
-        self.min_impulse = 0.0 #how much oomph we need for it
+        self.min_accel = 0.0 #how much oomph we need for it
         self.dv = 0.0 # dv required for this leg
         
         self.init_transfer()
@@ -86,12 +92,12 @@ class TransferStep(object):
             assert isinstance(self.source,planetsite.Site) and 'Orbit' not in self.source.location, 'Source for launch is not a ground site.  What gives?'
             self.duration = 600.0 #about ten minutes to reach orbit
             self.dv = self.source.planet.launch_dv()
-            self.min_impulse = self.dv/self.duration
+            self.min_accel = self.dv/self.duration
         elif self.transfer_type == 'Land':
             assert isinstance(self.dest,planetsite.Site) and 'Orbit' not in self.dest.location, 'Something wrong with the landing parameters!'
             self.duration = 600.0 #about ten minutes to land
             self.dv = self.dest.planet.launch_dv() #considering propulsive landing only, for now
-            self.min_impulse = self.dv/self.duration
+            self.min_accel = self.dv/self.duration
         elif self.transfer_type == 'Escape':
             assert (isinstance(self.source,planet.Planet) or isinstance(self.source,planet.Sun)) and self.source.primary is not None, 'Something wrong with our escape trajectory!'           
             self.dv = self.source.escape_velocity() 
@@ -103,7 +109,7 @@ class TransferStep(object):
             self.hohmann_string = calculate_hohmann(self.source,self.dest)            
             self.dv = abs(self.hohmann_string[2])
             self.duration = self.hohmann_string[3]
-            self.min_impulse = self.dv/self.duration
+            self.min_accel = self.dv/self.duration
             self.timing = self.hohmann_string[4]
             
             
