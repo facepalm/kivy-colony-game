@@ -84,9 +84,13 @@ trans_view_kv = '''
                 size: self.size
                 pos: self.pos
         Label:
-            text: 'Transfer mass: '+str(root.ship_mass)
+            text: 'Transfer mass: 0'
+            id: mass_label
         Label:
             id: dest_label
+            text: ''
+        Label:
+            id: feedback_label
             text: ''
     BoxLayout:
         orientation: 'vertical'
@@ -145,27 +149,39 @@ class MidPanel(BoxLayout):
 
         for ship in ship_adapter.selection:    
             ship_mass += float(ship.ship.mass())
-        self.ship_mass = ship_mass            
+        self.ship_mass = ship_mass   
+        self.mass_changed()         
         self.compute_trip()
 
     def dest_selected(self,tree,site):
         #generate trip object
         start = self.parent.parent.site       
+        if start is site:
+            #no trip
+            return
         self.trip = hohmann.Transfer(start,site)
         self.compute_trip()
         
     def res_changed(self, selector, value):
         self.res_model = selector.selected_resources
+        self.mass_changed()
         self.compute_trip()
+
+    def mass_changed(self):
+        if self.res_model:
+            self.ids['mass_label'].text = 'Transfer mass: '+str(self.ship_mass + self.res_model.mass())
 
     def compute_trip(self):
         if not self.trip:
-            self.ids['dest_label'].text = 'No destination selected!'   
+            self.ids['dest_label'].text = 'No destination selected!'
+            self.ids['feedback_label'].text = ''   
             return
         self.ids['dest_label'].text = 'Est dV: %.2f km/s \nDuration: %s \nBurn in: %s' % ((self.trip.dv()/1000.0),util.short_timestring(self.trip.duration()),util.short_timestring(self.trip.timing()))
         self.trip.dry_mass = self.ship_mass
         self.trip.resources = self.res_model
-        self.trip.calculate()
+        go_signal = self.trip.calculate()
+        self.ids['feedback_label'].text = self.trip.status
+        self.ids['feedback_label'].color = self.trip.color
     
 class RightPanel(BoxLayout):
     pass    

@@ -1,6 +1,7 @@
 
 import numpy as np
 from math import pi
+import math
 import planetsite
 import planet
 
@@ -18,8 +19,11 @@ class Transfer(object):
         self.start = start_site
         self.end = end_site
         
-        self.dry_mass=None
+        self.dry_mass=0
         self.resources=None
+        self.hohmann = True
+        self.status = 'Undetermined'
+        self.color = (0., 1., 0.)
         
         self.transfer_breakdown()
 
@@ -44,7 +48,7 @@ class Transfer(object):
         
         #TODO check for weirdness where A and B are not in the same system
         lcpi = listA.index(B.primary)
-        if lcpi < len(listA)-1: transfer_list.append(TransferStep('Transfer',listA[lcpi+1],B))
+        if lcpi < len(listA)-1: transfer_list.append(TransferStep('Transfer',listA[lcpi+1],B,high_thrust = self.hohmann))
         for i in range(lcpi+2,len(listA)):
             transfer_list.append(TransferStep('Escape',listA[i],None))
                 
@@ -71,19 +75,53 @@ class Transfer(object):
 
     def calculate(self):
         peak_accel = reduce( (lambda x, y: max(x,y)), [s.min_accel for s in self.stages] )  
+        total_mass = self.dry_mass
         
-        if self.resources:
-            rocket_mass = self.resources.get('rocket engines')
-            ion_mass = self.resources.get('ion engines')
-            
-            #thrusts in kN
-            rocket_thrust = 100.0*rocket_mass
-            ion_thrust = ion_mass*0.00002
-            
-            #static Isp for now
-            rocket_isp = 450
-            ion_isp = 2200
+        if not self.resources or total_mass+self.resources.mass() <= 0:
+            self.status = 'No engines or fuel available!'
+            self.color = (1,0,0)
+            return False
         
+        total_mass += self.resources.mass()
+        rocket_mass = self.resources.get('rocket engines')
+        ion_mass = self.resources.get('ion engines')
+            
+        #thrusts in kN
+        rocket_thrust = 100.0*rocket_mass
+        ion_thrust = ion_mass*0.00002
+            
+        if rocket_thrust/total_mass < peak_accel:
+            self.status = 'Insufficient thrust'
+            self.color = (1,0,0)
+            return False
+            
+        #static Isp for now
+        rocket_isp = 450
+        ion_isp = 2200
+        
+        rocket_fuel = self.resources.get('rocket fuel') 
+        ion_fuel = self.resources.get('xenon') 
+        
+        max_high_dv = abs(9.806*rocket_isp*math.log((1.*total_mass-rocket_fuel)/total_mass))
+        max_dv = abs(9.806*ion_isp*math.log((1.*total_mass-ion_fuel)/total_mass)) + max_high_dv
+                        
+            
+        if max_high_dv < self.high_dv():
+            print max_high_dv
+            self.status = 'Insufficient high-thrust dv'
+            self.color = (1,0,0)
+            return False
+            
+        if max_dv < self.dv():
+            self.status = 'Insufficient dv'
+            self.color = (1,0,0)
+            return False 
+            
+        
+        self.status = 'GO for transfer'
+        self.color = (0,0,1)
+        return True
+            
 
 class TransferStep(object):
     def __init__(self,transfer_type='Transfer',source=None,dest=None,high_thrust=True):    
@@ -104,12 +142,13 @@ class TransferStep(object):
             self.duration = 600.0 #about ten minutes to reach orbit
             self.dv = self.source.planet.launch_dv()
             self.min_accel = self.dv/self.duration
-            
+            self.high_thrust=True
         elif self.transfer_type == 'Land':
             assert isinstance(self.dest,planetsite.Site) and 'Orbit' not in self.dest.location, 'Something wrong with the landing parameters!'
             self.duration = 600.0 #about ten minutes to land
             self.dv = self.dest.planet.launch_dv() #considering propulsive landing only, for now
             self.min_accel = self.dv/self.duration
+            self.high_thrust=True
         elif self.transfer_type == 'Escape':
             assert (isinstance(self.source,planet.Planet) or isinstance(self.source,planet.Sun)) and self.source.primary is not None, 'Something wrong with our escape trajectory!'           
             self.dv = self.source.escape_velocity() 
