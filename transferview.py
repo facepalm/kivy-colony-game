@@ -92,11 +92,15 @@ trans_view_kv = '''
         Label:
             id: feedback_label
             text: ''
-    BoxLayout:
-        orientation: 'vertical'
+    AnchorLayout:
+        
         size_hint: 1,1
-        Label:
+        Button:
+            size_hint: 0.75, 0.25
             text: 'Buttons go here'
+            id: go_button
+            disabled: True
+            on_press: root.on_go_button()
 
 <RightPanel>:
     orientation: 'vertical'
@@ -175,6 +179,7 @@ class MidPanel(BoxLayout):
         if not self.trip:
             self.ids['dest_label'].text = 'No destination selected!'
             self.ids['feedback_label'].text = ''   
+            self.ids['go_button'].disabled=True
             return
         self.ids['dest_label'].text = 'Est dV: %.2f km/s \nDuration: %s \nBurn in: %s' % ((self.trip.dv()/1000.0),util.short_timestring(self.trip.duration()),util.short_timestring(self.trip.timing()))
         self.trip.dry_mass = self.ship_mass
@@ -182,6 +187,11 @@ class MidPanel(BoxLayout):
         go_signal = self.trip.calculate()
         self.ids['feedback_label'].text = self.trip.status
         self.ids['feedback_label'].color = self.trip.color
+    
+        self.ids['go_button'].disabled = not go_signal
+        
+    def on_go_button(self,*args):
+        print args
     
 class RightPanel(BoxLayout):
     pass    

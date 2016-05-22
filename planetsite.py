@@ -9,7 +9,7 @@ import util
 import naming
 
 class Site(object):
-    def __init__(self,planet,location='Orbit'):
+    def __init__(self,planet=None,location='Orbit'):
         self.planet = planet
         self.location = location
         self.id = util.register(self)
@@ -40,6 +40,12 @@ class Site(object):
         self.occupied = 0
         for s in self.stuff:
             self.occupied = max(self.occupied, s.occupation_level)
+
+class PlanetSite(Site):           
+    def __init__(self,**kwargs): 
+        super(PlanetSite, self).__init__(location='Transit')            
+        
             
-            
-            
+class TransitSite(Site):           
+    def __init__(self,**kwargs): 
+        super(TransitSite, self).__init__(planet=None,location='Transit')
