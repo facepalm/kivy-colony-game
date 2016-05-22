@@ -60,7 +60,7 @@ class Transfer(object):
         return reduce( (lambda x, y: x + y), [s.dv for s in self.stages] )       
         
     def high_dv(self):
-        return reduce( (lambda x, y: x + y), [s.dv for s in self.stages if s.min_impulse > 0] )        
+        return reduce( (lambda x, y: x + y), [s.dv for s in self.stages if s.min_accel > 0] )        
         
     def duration(self):
         return reduce( (lambda x, y: x + y), [s.duration for s in self.stages] ) 
@@ -72,11 +72,21 @@ class Transfer(object):
     def calculate(self):
         peak_accel = reduce( (lambda x, y: max(x,y)), [s.min_accel for s in self.stages] )  
         
-        
+        if self.resources:
+            rocket_mass = self.resources.get('rocket engines')
+            ion_mass = self.resources.get('ion engines')
+            
+            #thrusts in kN
+            rocket_thrust = 100.0*rocket_mass
+            ion_thrust = ion_mass*0.00002
+            
+            #static Isp for now
+            rocket_isp = 450
+            ion_isp = 2200
         
 
 class TransferStep(object):
-    def __init__(self,transfer_type='Transfer',source=None,dest=None):    
+    def __init__(self,transfer_type='Transfer',source=None,dest=None,high_thrust=True):    
         self.transfer_type = transfer_type
         self.source = source
         self.dest = dest
@@ -84,6 +94,7 @@ class TransferStep(object):
         self.duration = 0.0 #how long this phase takes
         self.min_accel = 0.0 #how much oomph we need for it
         self.dv = 0.0 # dv required for this leg
+        self.high_thrust=high_thrust
         
         self.init_transfer()
 
@@ -93,6 +104,7 @@ class TransferStep(object):
             self.duration = 600.0 #about ten minutes to reach orbit
             self.dv = self.source.planet.launch_dv()
             self.min_accel = self.dv/self.duration
+            
         elif self.transfer_type == 'Land':
             assert isinstance(self.dest,planetsite.Site) and 'Orbit' not in self.dest.location, 'Something wrong with the landing parameters!'
             self.duration = 600.0 #about ten minutes to land
@@ -105,13 +117,36 @@ class TransferStep(object):
             assert (isinstance(self.dest,planet.Planet) or isinstance(self.dest,planet.Sun)) and self.dest.primary is not None, 'Something wrong with our entry trajectory!'          
             self.dv = self.dest.escape_velocity()       
         elif self.transfer_type == 'Transfer':
-            #assume hohmann for now
-            self.hohmann_string = calculate_hohmann(self.source,self.dest)            
-            self.dv = abs(self.hohmann_string[2])
-            self.duration = self.hohmann_string[3]
-            self.min_accel = self.dv/self.duration
-            self.timing = self.hohmann_string[4]
+            if self.high_thrust:
+                #assume hohmann
+                self.hohmann_string = calculate_hohmann(self.source,self.dest)            
+                self.dv = abs(self.hohmann_string[2])
+                self.duration = self.hohmann_string[3]
+                self.min_accel = self.dv/self.duration
+                self.timing = self.hohmann_string[4]
+            else:
+                #long-term impulsive transfer
+                self.ion_string = calculate_long_impulsive(self.source,self.dest)
+                self.dv = abs(self.ion_string[0])    
+                
             
+
+def calculate_long_impulsive(planetA, planetB):
+    if planetA == planetB:
+        print "Same planet, forget it"
+    assert planetA.primary == planetB.primary, 'Transfers currently require matching primaries'
+    
+    mu = 6.674E-11 * planetA.primary.mass
+    
+    r1 = planetA.orbit * 149597870700
+    r2 = planetB.orbit * 149597870700
+    
+    v1 = np.sqrt(mu/r1)
+    v2 = np.sqrt(mu/r2)
+    
+    dee_vee = v2-v1
+    
+    return dee_vee,
             
 #equations from https://en.wikipedia.org/wiki/Hohmann_transfer_orbit
 def calculate_hohmann(planetA, planetB):

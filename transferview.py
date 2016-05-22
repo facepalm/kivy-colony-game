@@ -160,7 +160,7 @@ class MidPanel(BoxLayout):
 
     def compute_trip(self):
         if not self.trip:
-            self.ids['dest_label'].text = 'No destination selected!"   
+            self.ids['dest_label'].text = 'No destination selected!'   
             return
         self.ids['dest_label'].text = 'Est dV: %.2f km/s \nDuration: %s \nBurn in: %s' % ((self.trip.dv()/1000.0),util.short_timestring(self.trip.duration()),util.short_timestring(self.trip.timing()))
         self.trip.dry_mass = self.ship_mass
