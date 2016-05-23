@@ -125,11 +125,11 @@ class Planet(object):
         self.num_sites = 6 if self.type == 'Planet' else 2 if self.type == 'Dwarf planet' else 1 if self.type == 'Planetoid' else 0
         self.num_orbits = 1
         for s in range(self.num_orbits):
-            s1 = planetsite.Site(self,'Orbit'+str(s))
+            s1 = planetsite.PlanetSite(self,'Orbit'+str(s))
             self.sites.append(s1)
 
         for s in range(self.num_sites):
-            s1 = planetsite.Site(self,'Site'+str(s))
+            s1 = planetsite.PlanetSite(self,'Site'+str(s))
             self.sites.append(s1)
         
     def primary_image(self):

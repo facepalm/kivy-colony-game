@@ -11,7 +11,7 @@ import globalvars
 import util
 import resource_views
 import hohmann
-
+import planetsite
 
 
 trans_view_kv = '''
@@ -145,11 +145,13 @@ class MidPanel(BoxLayout):
     def __init__(self, **kwargs):
         super(MidPanel, self).__init__(**kwargs)
         self.res_model = None
+        self.ship_list = []
         self.ship_mass = 0
         self.trip = None
 
     def ships_changed(self, ship_adapter, *args):
         ship_mass = 0
+        self.ship_list = [s.ship for s in ship_adapter.selection]
 
         for ship in ship_adapter.selection:    
             ship_mass += float(ship.ship.mass())
@@ -191,7 +193,8 @@ class MidPanel(BoxLayout):
         self.ids['go_button'].disabled = not go_signal
         
     def on_go_button(self,*args):
-        print args
+        if not self.trip or not self.res_model: return
+        planetsite.TransferSite(transfer=self.trip,ships=self.ship_list,resources=self.res_model)
     
 class RightPanel(BoxLayout):
     pass    

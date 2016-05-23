@@ -9,20 +9,15 @@ import util
 import naming
 
 class Site(object):
-    def __init__(self,planet=None,location='Orbit'):
-        self.planet = planet
+    def __init__(self,location='Orbit'):
+        
         self.location = location
         self.id = util.register(self)
         
         self.fancy_name = 'Orbit' if 'Orbit' in self.location else 'GS-'+naming.mil_name()
-        self.name = self.fancy_name
+        self.name = self.fancy_name                
         
-        self.raw_resources = np.zeros(planetresources.raw_num,dtype='float32').squeeze() if 'Orbit' in self.location else np.multiply(2*np.random.random(planetresources.raw_num),self.planet.resources.raw)
-        self.effective_resources = np.multiply(self.raw_resources, self.planet.resources.raw_dist)
-        if self.effective_resources.sum() > 0: self.effective_resources /= sum(self.effective_resources)
-        
-        self.mine_init = np.random.random(planetresources.raw_num)
-        self.mine = self.mine_init/(self.raw_resources/1.5) if self.raw_resources.any() > 0 else np.ones(planetresources.raw_num,dtype='float32')*2  #self.mine_init < (self.resources/2)
+        #self.raw_resources = np.zeros(planetresources.raw_num,dtype='float32').squeeze()
         
         self.explored = self.planet.explored
         
@@ -42,10 +37,24 @@ class Site(object):
             self.occupied = max(self.occupied, s.occupation_level)
 
 class PlanetSite(Site):           
-    def __init__(self,**kwargs): 
-        super(PlanetSite, self).__init__(location='Transit')            
+    def __init__(self,planet=None,location='Orbit'): 
+        self.planet = planet
+        super(PlanetSite, self).__init__(location=location)            
+        
+        self.raw_resources = np.zeros(planetresources.raw_num,dtype='float32').squeeze() if 'Orbit' in self.location else np.multiply(2*np.random.random(planetresources.raw_num),self.planet.resources.raw)
+        self.effective_resources = np.multiply(self.raw_resources, self.planet.resources.raw_dist)
+        if self.effective_resources.sum() > 0: self.effective_resources /= sum(self.effective_resources)
+        
+        self.mine_init = np.random.random(planetresources.raw_num)
+        self.mine = self.mine_init/(self.raw_resources/1.5) if self.raw_resources.any() > 0 else np.ones(planetresources.raw_num,dtype='float32')*2  #self.mine_init < (self.resources/2)
         
             
 class TransitSite(Site):           
-    def __init__(self,**kwargs): 
-        super(TransitSite, self).__init__(planet=None,location='Transit')
+    def __init__(self,transfer=None,ships=[],resources=None): 
+        super(TransitSite, self).__init__(location='Transit')
+        self.name = 'GET FROM TRIP OBJECT'
+        self.fancy_name = self.name
+        
+        self.trip = transfer
+        self.ships = ships
+        self.resources = resources
