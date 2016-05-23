@@ -97,7 +97,7 @@ trans_view_kv = '''
         size_hint: 1,1
         Button:
             size_hint: 0.75, 0.25
-            text: 'Buttons go here'
+            text: 'Initialize Transfer'
             id: go_button
             disabled: True
             on_press: root.on_go_button()
@@ -195,6 +195,7 @@ class MidPanel(BoxLayout):
     def on_go_button(self,*args):
         if not self.trip or not self.res_model: return
         planetsite.TransferSite(transfer=self.trip,ships=self.ship_list,resources=self.res_model)
+        
     
 class RightPanel(BoxLayout):
     pass    
