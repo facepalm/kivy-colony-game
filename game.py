@@ -6,10 +6,9 @@ import globalvars
 import systempanel
 import util
 import planet
-import ark
-import structure
+import structures.ark as ark
+import structures.structure as structure
 import hohmann
-import structure
 
 class Universe(object):    
     def __init__(self):
