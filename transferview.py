@@ -194,7 +194,8 @@ class MidPanel(BoxLayout):
         
     def on_go_button(self,*args):
         if not self.trip or not self.res_model: return
-        planetsite.TransferSite(transfer=self.trip,ships=self.ship_list,resources=self.res_model)
+        planetsite.TransferSite(transfer=self.trip,ships=self.ship_list,resources=self.res_model,site=self.parent.parent.site)
+        self.trip.start_transfer()
         
     
 class RightPanel(BoxLayout):

@@ -26,6 +26,9 @@ class Transfer(object):
         self.color = (0., 1., 0.)
         
         self.transfer_breakdown()
+        
+        self.delay_until = 0
+        self.duration_til = 0
 
     def transfer_breakdown(self):
         transfer_list = []                
@@ -122,6 +125,18 @@ class Transfer(object):
         self.color = (0,0,1)
         return True
             
+    def start_transfer(self):
+        self.delay_until = self.timing()
+        self.duration_til = self.duration()
+
+    def update(self,dt):
+        if self.delay_until > 0:
+            amt = min(self.delay_until,dt)
+            self.delay_until -= amt
+            dt -= amt
+            if dt <= 0: return 'Waiting'
+        self.duration_til -= dt
+        return 'Transit' if self.duration_til > 0  else 'Arrived'
 
 class TransferStep(object):
     def __init__(self,transfer_type='Transfer',source=None,dest=None,high_thrust=True):    
