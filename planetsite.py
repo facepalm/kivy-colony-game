@@ -80,7 +80,7 @@ class TransferSite(Site):
         for s in self.ships:
             s.site = site
             site.stuff.append(s)
-            
+                         
         site.resources.merge(self.resources)
                 
         

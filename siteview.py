@@ -88,9 +88,14 @@ class SiteEntrySmall(BoxLayout):
         self.site = kwargs['site']
         super(SiteEntrySmall, self).__init__(**kwargs)                
         
+        self.refresh_ships()
+        
+    def refresh_ships(self):            
+        self.ids['ships'].clear_widgets()
         for s in self.site.stuff:
             self.ids['ships'].add_widget(s.image)
         
+      
         
     def on_touch_down(self, touch):
         touch.push()
@@ -240,11 +245,18 @@ class SiteView(Screen):
     def __init__(self, **kwargs):
         self.site = kwargs['site']
         self.name = util.short_id(self.site.id)+'-site'
-        super(SiteView, self).__init__(**kwargs)                    
+        super(SiteView, self).__init__(**kwargs)                                    
+            
+        self.refresh_ships()
         
+    def refresh_ships(self):            
+        self.ids['shiplist'].clear_widgets()
         for s in self.site.stuff:    
             b = ShipTwist(ship=s, source = shipimage.shipimages[s.imagename])
             self.ids['shiplist'].add_widget(b)
+    
+    def on_pre_enter(self):
+        self.refresh_ships() 
             
     def start_transfer(self):
         tname = util.short_id(self.site.id)+'-transfer'            

@@ -162,6 +162,9 @@ class PlanetPanel(Screen):
     
         
     def on_pre_enter(self):
+
+        for s in self.ids['panel3'].children: s.children[0].refresh_ships()  
+        
         self.ids['exploration_string'].text = "{0:.0f} % explored".format(100*self.planet.explored)
         
     '''def on_touch_down(self, touch):
