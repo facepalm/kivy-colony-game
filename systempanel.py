@@ -17,6 +17,8 @@ from kivy.graphics.context_instructions import Scale
 from kivy.uix.screenmanager import Screen
 from kivy.lang import Builder
 
+import planetsite
+
 orbit_constant = 3.0
 
 
@@ -76,7 +78,13 @@ class SystemView(ScrollView):
                 with self.map.canvas.before: 
                     Color( 0.5, 0.5, 0.25 )
                     Line(circle=( self.map.size[0]/2, self.map.size[1]/2, 0.5*self.map.size[0]*float(math.log((body.orbit+1),10)/self.orbit_constant)), dash_length=20, dash_offset = 10)
-
-
-            
-        
+                    
+                    '''
+        all_trans = list( filter((lambda x: isinstance(x,planetsite.TransferSite)), globalvars.ids.values()))                    
+        print globalvars.ids.values()
+        for trans in all_trans:
+            if trans.status == 'Transit':
+                frac = trans.trip.tripfrac()
+                with self.map.canvas.before:
+                    pass
+                    print frac'''

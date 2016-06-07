@@ -95,3 +95,5 @@ class TransferSite(Site):
         elif self.status == 'Transit' and trans == 'Arrived':
             self.arrive()
         print self.status, util.short_timestring(self.trip.delay_until), util.short_timestring(self.trip.duration_til)
+        
+                

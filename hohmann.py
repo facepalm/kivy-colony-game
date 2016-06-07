@@ -75,6 +75,9 @@ class Transfer(object):
     def timing(self):
         return reduce( (lambda x, y: x + y), [s.timing for s in self.stages] )                 
         
+    def tripfrac(self): 
+        if self.duration() <= 0: return 0
+        return self.duration_til/self.duration()
 
     def calculate(self):
         peak_accel = reduce( (lambda x, y: max(x,y)), [s.min_accel for s in self.stages] )  
